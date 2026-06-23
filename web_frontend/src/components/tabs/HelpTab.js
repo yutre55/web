@@ -4,7 +4,7 @@ import { Icons } from '../../utils/icons';
 const HelpTab = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-       <div className="space-y-6"><div className="bg-zinc-900/40 border border-white/5 rounded-[2.5rem] p-8 backdrop-blur-md"><div className="flex justify-between items-center mb-10"><h2 className="text-3xl font-black uppercase italic text-red-600 leading-none">Support Portal</h2><Icons.HelpCircle className="w-6 h-6 text-red-600" /></div><p className="text-zinc-500 text-xs leading-relaxed mb-8 italic">// Core relay engineers available 24/7 for technical mitigation.</p>
+       <div className="space-y-6"><div className="bg-zinc-900/40 border border-white/5 rounded-[2.5rem] p-8 backdrop-blur-md"><div className="flex justify-between items-center mb-10"><h2 className="text-3xl font-black uppercase italic text-red-600 leading-none">Support Portal</h2><Icons.HelpCircle className="w-6 h-6 text-red-600" /></div><p className="text-zinc-500 text-xs leading-relaxed mb-8 italic">{"// Core relay engineers available 24/7 for technical mitigation."}</p>
        <a href="https://t.me/+NsxR65wYx5Y3OGQ9" target="_blank" rel="noopener noreferrer"><button className="w-full bg-white text-black py-4 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-red-600 hover:text-white transition-all flex items-center justify-center gap-3"><Icons.MessageSquare className="w-4 h-4" /> Contact for Help</button></a></div></div>
        <div className="lg:col-span-2"><div className="bg-zinc-900/40 border border-white/5 rounded-[2.5rem] p-8 sm:p-12 backdrop-blur-md"><h3 className="text-2xl font-black uppercase tracking-tight mb-10">Operational <span className="text-red-600">FAQ</span></h3><div className="space-y-6">
           {[

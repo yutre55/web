@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Icons } from '../../utils/icons';
 import { API_BASE_URL } from '../../utils/api';
 
@@ -8,7 +8,7 @@ const PaymentGateway = ({ isOpen, onClose, onSubmit, amount, orderId, showNotify
   const [utr, setUtr] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedMethod, setSelectedMethod] = useState('UPI');
-  const [qrKey, setQrKey] = useState(Date.now());
+  const [qrKey] = useState(Date.now());
   const [qrBlobUrl, setQrBlobUrl] = useState(null);
   const [qrError, setQrError] = useState(false);
 
@@ -41,7 +41,7 @@ const PaymentGateway = ({ isOpen, onClose, onSubmit, amount, orderId, showNotify
     return () => {
       if (qrBlobUrl) URL.revokeObjectURL(qrBlobUrl);
     };
-  }, [isOpen, qrKey]);
+  }, [isOpen, qrKey, qrBlobUrl]);
 
   useEffect(() => {
     let timer;
@@ -52,7 +52,7 @@ const PaymentGateway = ({ isOpen, onClose, onSubmit, amount, orderId, showNotify
       if (showNotify) showNotify("SESSION_EXPIRED", "error");
     }
     return () => clearInterval(timer);
-  }, [isOpen, timeLeft]);
+  }, [isOpen, timeLeft, onClose, showNotify]);
 
   const formatTime = (seconds) => {
     const m = Math.floor(seconds / 60);

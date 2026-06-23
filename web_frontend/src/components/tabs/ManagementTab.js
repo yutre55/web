@@ -74,8 +74,8 @@ const ManagementTab = ({ orders, setIsEnlisting, setIsEnlistingRoom, handleUpdat
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-         <div className="bg-zinc-900/40 border border-white/5 rounded-[2.5rem] p-8 backdrop-blur-md"><h3 className="text-xl font-black uppercase mb-6 flex items-center gap-3"><Icons.Zap className="w-5 h-5 text-green-500" />Asset Deployment</h3><p className="text-zinc-500 text-sm mb-8 italic">// Enlist new exploits or tools into the market terminal.</p><button onClick={() => setIsEnlisting(true)} className="w-full bg-green-500/10 text-green-500 border border-green-500/20 py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-green-600 hover:text-white transition-all">Enlist New Asset</button></div>
-         <div className="bg-zinc-900/40 border border-white/5 rounded-[2.5rem] p-8 backdrop-blur-md"><h3 className="text-xl font-black uppercase mb-6 flex items-center gap-3"><Icons.Trophy className="w-5 h-5 text-red-600" />Simulation Control</h3><p className="text-zinc-500 text-sm mb-8 italic">// Deploy new combat rooms and manage simulations.</p><button onClick={() => setIsEnlistingRoom(true)} className="w-full bg-red-600/10 text-red-600 border border-red-600/20 py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-red-600 hover:text-white transition-all">Deploy New Room</button></div>
+         <div className="bg-zinc-900/40 border border-white/5 rounded-[2.5rem] p-8 backdrop-blur-md"><h3 className="text-xl font-black uppercase mb-6 flex items-center gap-3"><Icons.Zap className="w-5 h-5 text-green-500" />Asset Deployment</h3><p className="text-zinc-500 text-sm mb-8 italic">{"// Enlist new exploits or tools into the market terminal."}</p><button onClick={() => setIsEnlisting(true)} className="w-full bg-green-500/10 text-green-500 border border-green-500/20 py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-green-600 hover:text-white transition-all">Enlist New Asset</button></div>
+         <div className="bg-zinc-900/40 border border-white/5 rounded-[2.5rem] p-8 backdrop-blur-md"><h3 className="text-xl font-black uppercase mb-6 flex items-center gap-3"><Icons.Trophy className="w-5 h-5 text-red-600" />Simulation Control</h3><p className="text-zinc-500 text-sm mb-8 italic">{"// Deploy new combat rooms and manage simulations."}</p><button onClick={() => setIsEnlistingRoom(true)} className="w-full bg-red-600/10 text-red-600 border border-red-600/20 py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-red-600 hover:text-white transition-all">Deploy New Room</button></div>
       </div>
 
       {/* Payment Configuration Section */}
@@ -89,7 +89,7 @@ const ManagementTab = ({ orders, setIsEnlisting, setIsEnlistingRoom, handleUpdat
                </div>
             </div>
             <div className="flex-1 space-y-4">
-               <p className="text-zinc-500 text-sm italic leading-relaxed">Update the global payment QR code. This image will be served to all operators during fund initialization. Recommended size: 500x500px.</p>
+               <p className="text-zinc-500 text-sm italic leading-relaxed">{"Update the global payment QR code. This image will be served to all operators during fund initialization. Recommended size: 500x500px."}</p>
                <input type="file" ref={qrInputRef} onChange={handleQRUpload} className="hidden" accept="image/*" />
                <button
                   onClick={() => qrInputRef.current.click()}

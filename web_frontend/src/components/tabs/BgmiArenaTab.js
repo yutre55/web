@@ -11,7 +11,7 @@ const BgmiArenaTab = ({ tournaments, registeredTournaments, handleRegisterTourna
         {tournaments.map((t) => (
           <div key={t._id} className="bg-zinc-900/40 border border-white/5 rounded-[2.5rem] p-8 backdrop-blur-md relative overflow-hidden group">
             <div className="flex justify-between items-start mb-6">
-              <div className="px-3 py-1 bg-red-600/10 border border-red-600/20 rounded-full"><span className="text-[9px] font-black text-red-600 uppercase tracking-widest">{t.mode} // {t.map}</span></div>
+              <div className="px-3 py-1 bg-red-600/10 border border-red-600/20 rounded-full"><span className="text-[9px] font-black text-red-600 uppercase tracking-widest">{t.mode} {"//"} {t.map}</span></div>
               <div className="text-right"><p className="text-[8px] text-zinc-600 font-black uppercase">Prize Pool</p><p className="text-lg font-black text-green-500 italic">{t.prize}</p></div>
             </div>
             <h3 className="text-2xl font-black uppercase tracking-tighter mb-6 group-hover:text-red-600 transition-colors">{t.title}</h3>
@@ -32,7 +32,7 @@ const BgmiArenaTab = ({ tournaments, registeredTournaments, handleRegisterTourna
       </div>
       <div className="mt-20">
         <div className="flex items-center gap-4 mb-10"><div className="h-10 w-1.5 bg-red-600 rounded-full" /><div><h3 className="text-3xl font-black uppercase tracking-tighter">Combat <span className="text-red-600">History</span></h3><p className="text-[10px] text-zinc-600 font-mono tracking-widest">LOGGED_FOR: @{currentUser?.username}</p></div></div>
-        {registeredTournaments.length === 0 ? <div className="bg-zinc-900/20 border border-dashed border-white/5 rounded-[3rem] p-12 text-center opacity-40"><Icons.Target className="w-12 h-12 text-zinc-800 mx-auto mb-4" /><p className="text-zinc-600 font-mono text-xs tracking-widest uppercase italic">// NO_COMBAT_HISTORY_FOUND</p></div> : (
+        {registeredTournaments.length === 0 ? <div className="bg-zinc-900/20 border border-dashed border-white/5 rounded-[3rem] p-12 text-center opacity-40"><Icons.Target className="w-12 h-12 text-zinc-800 mx-auto mb-4" /><p className="text-zinc-600 font-mono text-xs tracking-widest uppercase italic">{"// NO_COMBAT_HISTORY_FOUND"}</p></div> : (
           <div className="space-y-4">
             {registeredTournaments.map(reg => (
               <div key={`reg-${reg._id}`} className="bg-zinc-900/60 border-l-4 border-red-600 p-6 sm:p-8 rounded-r-3xl backdrop-blur-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 group hover:bg-zinc-900/80 transition-all">

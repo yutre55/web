@@ -77,7 +77,7 @@ const WalletTab = ({ currentUser, setCurrentUser, orders, registeredTournaments,
                 <button
                   key={p}
                   onClick={() => setAmount(p)}
-                  className={`py-2.5 sm:py-3 rounded-xl text-[9px] sm:text-[10px] font-black transition-all border ${amount == p ? 'bg-red-600 border-red-600 text-white' : 'bg-white/5 border-white/5 text-zinc-500 hover:border-white/20'}`}
+                  className={`py-2.5 sm:py-3 rounded-xl text-[9px] sm:text-[10px] font-black transition-all border ${amount === p ? 'bg-red-600 border-red-600 text-white' : 'bg-white/5 border-white/5 text-zinc-500 hover:border-white/20'}`}
                 >
                   ₹{p.toLocaleString()}
                 </button>
@@ -162,7 +162,7 @@ const WalletTab = ({ currentUser, setCurrentUser, orders, registeredTournaments,
           {orders.length === 0 && registeredTournaments.length === 0 && (
             <div className="bg-zinc-900/20 border border-dashed border-white/5 rounded-[3rem] p-12 text-center opacity-40">
               <Icons.Activity className="w-12 h-12 text-zinc-800 mx-auto mb-4" />
-              <p className="text-zinc-600 font-mono text-xs tracking-widest uppercase italic">// NO_TRANSACTION_HISTORY_FOUND</p>
+              <p className="text-zinc-600 font-mono text-xs tracking-widest uppercase italic">{"// NO_TRANSACTION_HISTORY_FOUND"}</p>
             </div>
           )}
         </div>
