@@ -53,11 +53,6 @@ const App = () => {
   const [notification, setNotification] = useState(null);
   const [telemetry, setTelemetry] = useState({ hex: '0xAF', status: 'INIT', ping: 12, health: 98.4 });
   const [liveStats, setLiveStats] = useState({ relays: 4892, bandwidth: 892.4, latency: 12 });
-  const [terminalLogs, setTerminalLogs] = useState([
-    { time: '14:22:01', msg: 'ENCRYPTED_HANDSHAKE_ESTABLISHED', type: 'info' },
-    { time: '14:22:12', msg: 'SECURITY_SCAN_COMPLETED_100%', type: 'success' },
-    { time: '14:23:01', msg: 'GLOBAL_RELAY_SYNC_STABLE', type: 'success' },
-  ]);
 
   const graphSeeds = useMemo(() => Array.from({ length: 40 }, () => ({ h1: 10 + Math.random() * 20, h2: 40 + Math.random() * 50, h3: 10 + Math.random() * 20, d: 1.5 + Math.random() * 2, delay: Math.random() * 0.5 })), []);
 
@@ -114,7 +109,7 @@ const App = () => {
     }, 5000); // 5 seconds
 
     return () => clearInterval(refreshInterval);
-  }, [isLoggedIn, currentUser?.username, currentUser?.password, activeTab]);
+  }, [isLoggedIn, currentUser, activeTab]);
 
   useEffect(() => {
     const markAsRead = async () => {
@@ -129,7 +124,7 @@ const App = () => {
       }
     };
     markAsRead();
-  }, [activeTab, isLoggedIn, currentUser]);
+  }, [activeTab, isLoggedIn, currentUser, messages]);
 
   useEffect(() => {
     const handleMouseMove = (e) => setMousePos({ x: e.clientX, y: e.clientY });
@@ -144,10 +139,9 @@ const App = () => {
       let minRelays, maxRelays; if (hour >= 9 && hour <= 23) { minRelays = 4000; maxRelays = 9800; } else { minRelays = 400; maxRelays = 3000; }
       setLiveStats(prev => ({ ...prev, relays: Math.floor(Math.random() * (maxRelays - minRelays + 1)) + minRelays, bandwidth: parseFloat((800 + Math.random() * 200).toFixed(1)), latency: Math.floor(Math.random() * 20) + 5 }));
       if (Math.random() > 0.7) {
-        const logMsgs = [{ msg: 'NEW_ENCRYPTED_PKT_RECEIVED', type: 'info' }, { msg: 'ROUTING_TABLE_UPDATED', type: 'info' }, { msg: 'MALICIOUS_NODE_QUARANTINED', type: 'warn' }, { msg: 'DECRYPTION_HANDSHAKE_SUCCESS', type: 'success' }, { msg: 'RELAY_MESH_OPTIMIZED', type: 'success' }];
-        const newLog = { ...logMsgs[Math.floor(Math.random() * logMsgs.length)], time: new Date().toLocaleTimeString('en-GB', { hour12: false }) };
-        setTerminalLogs(prev => [...prev.slice(-9), newLog]);
+        // Log rotation logic (simulation)
       }
+    }, 3000);
     }, 3000);
     return () => { window.removeEventListener('mousemove', handleMouseMove); clearInterval(interval); };
   }, []);
