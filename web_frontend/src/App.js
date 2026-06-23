@@ -142,7 +142,6 @@ const App = () => {
         // Log rotation logic (simulation)
       }
     }, 3000);
-    }, 3000);
     return () => { window.removeEventListener('mousemove', handleMouseMove); clearInterval(interval); };
   }, []);
 
