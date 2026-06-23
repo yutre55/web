@@ -168,6 +168,18 @@ const App = () => {
     e.preventDefault();
     setIsAuthenticating(true);
     setStatusMessage({ text: '', type: '' });
+
+    // Password Validation: 8+ chars, 1 Uppercase, 1 Number
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setStatusMessage({
+        text: "ERROR: Password must be 8+ chars with 1 Capital & 1 Number.",
+        type: 'error'
+      });
+      setIsAuthenticating(false);
+      return;
+    }
+
     const res = await callApi('signup', { username, password, telegram });
     if (res.success) {
       setAuthMode('login');

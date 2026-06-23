@@ -9,7 +9,7 @@ const getBaseUrl = () => {
     // If hosted on a domain, assume backend is at the same origin or set via ENV
     return window.location.origin;
   }
-  return 'https://32cd-4-240-39-201.ngrok-free.app';
+  return 'https://1d65-20-192-21-54.ngrok-free.app';
 };
 
 export const API_BASE_URL = getBaseUrl();
