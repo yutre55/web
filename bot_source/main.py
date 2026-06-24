@@ -1094,13 +1094,15 @@ def perform_db_restore(message):
         bot.send_message(message.chat.id, f"❌ *Error restoring DB:* {str(e)}", parse_mode="Markdown")
 
 def run_flask():
-    app.run(port=8080, host='0.0.0.0', debug=False)
+    # Use PORT environment variable for Render deployment, fallback to 8080 locally
+    port = int(os.environ.get("PORT", 8080))
+    app.run(port=port, host='0.0.0.0', debug=False)
 
 if __name__ == "__main__":
     threading.Thread(target=run_flask, daemon=True).start()
-    print("🚀 API Backend Online | Bot is active...")
+    print(f"🚀 API Backend Online | Port: {os.environ.get('PORT', 8080)}")
     time.sleep(2)
+    # Ngrok logic remains as a fallback for local testing
     url = get_ngrok_url()
     if url: print(f"🌐 NGROK DETECTED: {url}")
-    else: print("⚠️ NGROK NOT DETECTED (Ensure ngrok is running on port 8080)")
     bot.infinity_polling()
