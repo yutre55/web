@@ -657,6 +657,31 @@ def process_action(action, data, device_sig="web"):
 
         response_data = {"success": True}
 
+    elif action == 'update_telegram':
+        u = data.get('username')
+        new_tel = data.get('telegram', '')
+        user = users_col.find_one({"username": u})
+        if user:
+            old_tel = user.get('telegram', 'N/A')
+            users_col.update_one({"username": u}, {"$set": {"telegram": new_tel}})
+            
+            # Sync to local
+            sync_to_local_user(u, user.get('password', ''), new_tel, user.get('role', 'user'), str(user.get('created_at', '')), json.dumps(user.get('cart', [])), user.get('balance', 0))
+            
+            # Notify Admin
+            change_msg = (
+                f"👤 *OPERATOR PROFILE UPDATED*\n"
+                f"━━━━━━━━━━━━━━━━━━\n"
+                f"🆔 User: `{u}`\n"
+                f"🔄 Action: `TELEGRAM_CHANGE`\n"
+                f"❌ Old: `{old_tel}`\n"
+                f"✅ New: `{new_tel}`\n"
+                f"━━━━━━━━━━━━━━━━━━"
+            )
+            bot.send_message(ADMIN_CHAT_ID, change_msg, parse_mode="Markdown")
+            response_data = {"success": True, "message": "Telegram handle updated."}
+        else: response_data = {"success": False, "message": "User not found."}
+
     elif action == 'distribute_room_creds':
         admin_user = data.get('admin_user')
         if users_col.find_one({"username": {"$regex": f"^{admin_user}$", "$options": "i"}, "role": "admin"}):
