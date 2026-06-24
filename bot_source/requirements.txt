@@ -1,0 +1,5 @@
+pyTelegramBotAPI
+Flask
+Flask-CORS
+requests
+pymongo[srv]
