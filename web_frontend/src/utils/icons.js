@@ -41,4 +41,5 @@ export const Icons = {
   HelpCircle: getIcon('HelpCircle'),
   Info: getIcon('Info'),
   Camera: getIcon('Camera'),
+  AlertTriangle: getIcon('AlertTriangle') || getIcon('AlertCircle'),
 };

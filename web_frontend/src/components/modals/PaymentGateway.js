@@ -15,19 +15,10 @@ const PaymentGateway = ({ isOpen, onClose, onSubmit, amount, orderId, showNotify
   useEffect(() => {
     const fetchQR = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/qr.png?v=${qrKey}`, {
-          headers: {
-            'ngrok-skip-browser-warning': 'true'
-          }
-        });
-        if (response.ok) {
-          const blob = await response.blob();
-          const url = URL.createObjectURL(blob);
-          setQrBlobUrl(url);
-          setQrError(false);
-        } else {
-          setQrError(true);
-        }
+        // Direct URL without blob conversion to test if it's a fetch issue
+        const url = `${API_BASE_URL}/qr.png?v=${qrKey}`;
+        setQrBlobUrl(url);
+        setQrError(false);
       } catch (err) {
         console.error("QR Fetch Error:", err);
         setQrError(true);

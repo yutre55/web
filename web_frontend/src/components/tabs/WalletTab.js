@@ -6,8 +6,25 @@ import PaymentGateway from '../modals/PaymentGateway';
 const WalletTab = ({ currentUser, setCurrentUser, orders, registeredTournaments, showNotify }) => {
   const [amount, setAmount] = useState('');
   const [pendingPayment, setPendingPayment] = useState(null);
+  const [newTelegram, setNewTelegram] = useState(currentUser?.telegram || '');
+  const [isUpdatingTelegram, setIsUpdatingTelegram] = useState(false);
 
   const presets = [500, 1000, 2000, 5000, 10000];
+
+  const handleUpdateTelegram = async (e) => {
+    e.preventDefault();
+    if (!newTelegram) return;
+    setIsUpdatingTelegram(true);
+    const res = await callApi('update_telegram', {
+      username: currentUser.username,
+      telegram: newTelegram
+    });
+    if (res.success) {
+      setCurrentUser(prev => ({ ...prev, telegram: newTelegram }));
+      showNotify("PROFILE_UPDATED");
+    } else showNotify(res.message, "error");
+    setIsUpdatingTelegram(false);
+  };
 
   const handleInitializeTransfer = (e) => {
     if (e) e.preventDefault();
@@ -64,6 +81,34 @@ const WalletTab = ({ currentUser, setCurrentUser, orders, registeredTournaments,
             </div>
           </div>
           <Icons.Zap className="absolute -top-10 -right-10 w-48 h-48 sm:w-64 sm:h-64 opacity-[0.03] rotate-12 transition-opacity group-hover:opacity-[0.08]" />
+        </div>
+
+        {/* Profile Settings */}
+        <div className="bg-zinc-900/40 border border-white/5 rounded-[2.5rem] sm:rounded-[3rem] p-8 sm:p-10 backdrop-blur-md relative">
+          <h4 className="text-lg sm:text-xl font-black uppercase tracking-tight mb-6 sm:mb-8 text-red-600">Operator <span className="text-white">Profile</span></h4>
+          <form onSubmit={handleUpdateTelegram} className="space-y-6">
+            <div className="space-y-3">
+              <label className="text-[8px] sm:text-[9px] font-black text-zinc-600 uppercase tracking-[0.3em] ml-2">Telegram Handle</label>
+              <div className="relative">
+                <Icons.MessageSquare className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-700" />
+                <input
+                  type="text"
+                  placeholder="@username"
+                  value={newTelegram}
+                  onChange={(e) => setNewTelegram(e.target.value)}
+                  className="w-full bg-black/60 border-l-4 border-zinc-800 py-3 sm:py-4 pl-14 pr-6 text-white outline-none focus:border-red-600 transition-all font-mono text-sm tracking-widest"
+                />
+              </div>
+              <p className="text-[8px] text-zinc-600 italic ml-2">{"// Change your contact handle if entered incorrectly during node sync."}</p>
+            </div>
+            <button
+              type="submit"
+              disabled={isUpdatingTelegram}
+              className="w-full bg-white text-black py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-red-600 hover:text-white transition-all flex items-center justify-center gap-3"
+            >
+              {isUpdatingTelegram ? <Icons.Activity className="w-4 h-4 animate-spin" /> : "Update Profile"}
+            </button>
+          </form>
         </div>
 
         {/* Add Funds Form */}

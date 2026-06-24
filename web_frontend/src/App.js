@@ -57,32 +57,43 @@ const App = () => {
   const graphSeeds = useMemo(() => Array.from({ length: 40 }, () => ({ h1: 10 + Math.random() * 20, h2: 40 + Math.random() * 50, h3: 10 + Math.random() * 20, d: 1.5 + Math.random() * 2, delay: Math.random() * 0.5 })), []);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (isManual = false) => {
       if (isLoggedIn && currentUser) {
-        const pRes = await callApi('fetch_products');
-        if (pRes.success) setProducts(pRes.products);
+        // Run all fetches in parallel for better performance
+        const [pRes, tRes, oRes, iRes, rRes] = await Promise.all([
+          callApi('fetch_products'),
+          callApi('fetch_tournaments'),
+          callApi('fetch_orders', { username: currentUser.username }),
+          callApi('fetch_inbox', { username: currentUser.username }),
+          callApi('fetch_registered_tournaments', { username: currentUser.username })
+        ]);
 
-        const tRes = await callApi('fetch_tournaments');
-        if (tRes.success) setTournaments(tRes.tournaments);
-
-        const oRes = await callApi('fetch_orders', { username: currentUser.username });
-        if (oRes.success) setOrders(oRes.orders);
-
-        const iRes = await callApi('fetch_inbox', { username: currentUser.username });
-        if (iRes.success) {
-          setMessages(iRes.messages);
-
-          // Check for new balance in the user object if returned by a sync-enabled action
-          // Note: Most fetch actions don't return the full user object, but we can
-          // perform a lightweight 'sync_user' if needed.
+        if (pRes.success) {
+          // Only update if data changed (simple length/first-id check)
+          setProducts(prev => JSON.stringify(prev) !== JSON.stringify(pRes.products) ? pRes.products : prev);
         }
 
-        const rRes = await callApi('fetch_registered_tournaments', { username: currentUser.username });
-        if (rRes.success) setRegisteredTournaments(rRes.tournaments);
+        if (tRes.success) {
+          setTournaments(prev => JSON.stringify(prev) !== JSON.stringify(tRes.tournaments) ? tRes.tournaments : prev);
+        }
+
+        if (oRes.success) {
+          setOrders(prev => JSON.stringify(prev) !== JSON.stringify(oRes.orders) ? oRes.orders : prev);
+        }
+
+        if (iRes.success) {
+          setMessages(prev => JSON.stringify(prev) !== JSON.stringify(iRes.messages) ? iRes.messages : prev);
+        }
+
+        if (rRes.success) {
+          setRegisteredTournaments(prev => JSON.stringify(prev) !== JSON.stringify(rRes.tournaments) ? rRes.tournaments : prev);
+        }
 
         if (currentUser.role === 'admin') {
           const aRes = await callApi('fetch_all_orders', { admin_user: currentUser.username });
-          if (aRes.success) setOrders(aRes.orders);
+          if (aRes.success) {
+            setOrders(prev => JSON.stringify(prev) !== JSON.stringify(aRes.orders) ? aRes.orders : prev);
+          }
         }
       }
     };
@@ -229,16 +240,23 @@ const App = () => {
   };
 
   const handleRemoveProduct = async (pId) => {
-    if (!window.confirm("Are you sure you want to delete this asset?")) return;
     const res = await callApi('remove_product', { admin_user: currentUser.username, product_id: pId });
     if (res.success) {
       const pRes = await callApi('fetch_products');
       if (pRes.success) setProducts(pRes.products);
-    } else alert(res.message);
+      showNotify("ASSET_DELETED");
+    } else showNotify(res.message, 'error');
   };
 
   const calculateTotal = () => cart.reduce((acc, item) => { const price = parseFloat(item.price.toString().replace(/[₹,]/g, '')); return acc + (isNaN(price) ? 0 : price); }, 0).toLocaleString('en-IN');
   const handleOrder = async () => {
+    // 1. Client-side Balance Check
+    const totalVal = parseFloat(calculateTotal().replace(/,/g, ''));
+    if ((currentUser?.balance || 0) < totalVal) {
+      showNotify("INSUFFICIENT_FUNDS", 'error');
+      return;
+    }
+
     const res = await callApi('checkout', { username: currentUser.username, items: cart, total: calculateTotal() });
     if (res.success) {
       showNotify("ORDER PLACED.");

@@ -51,6 +51,14 @@ const ManagementTab = ({ orders, setIsEnlisting, setIsEnlistingRoom, handleUpdat
     } else showNotify(res.message, "error");
   };
 
+  const handleRemoveRoomLocal = async (rId) => {
+    const res = await callApi('remove_room', { admin_user: currentUser.username, room_id: rId });
+    if (res.success) {
+      setTournaments(prev => prev.filter(t => t._id !== rId));
+      showNotify("ROOM_DESTROYED");
+    } else showNotify(res.message, "error");
+  };
+
   const handleUpdateStatus = (oId, status) => {
     handleUpdateOrderStatus(oId, status);
   };
@@ -134,7 +142,10 @@ const ManagementTab = ({ orders, setIsEnlisting, setIsEnlistingRoom, handleUpdat
                      <h4 className="font-bold text-white uppercase tracking-tight">{t.title}</h4>
                      <p className="text-[10px] text-zinc-500 font-mono uppercase mt-1">{t.slots} Slots Filled • {t.map} ({t.mode})</p>
                   </div>
-                  <button onClick={() => setDistributingRoomId(t._id)} className="bg-blue-600/10 text-blue-500 border border-blue-600/20 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all">Send ID/Pass</button>
+                  <div className="flex gap-3">
+                     <button onClick={() => setDistributingRoomId(t._id)} className="bg-blue-600/10 text-blue-500 border border-blue-600/20 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all">Send ID/Pass</button>
+                     <button onClick={() => handleRemoveRoomLocal(t._id)} className="bg-red-600/10 text-red-600 border border-red-600/20 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all">Delete</button>
+                  </div>
                </div>
             ))}
          </div>

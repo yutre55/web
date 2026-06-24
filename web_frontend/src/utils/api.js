@@ -9,18 +9,14 @@ const getBaseUrl = () => {
     // If hosted on a domain, assume backend is at the same origin or set via ENV
     return window.location.origin;
   }
-  return 'https://1d65-20-192-21-54.ngrok-free.app';
+  return 'https://web-jo90.onrender.com';
 };
 
 export const API_BASE_URL = getBaseUrl();
 
 export const callApi = async (action, data = {}) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/api/v1/web`, { action, data }, {
-      headers: {
-        'ngrok-skip-browser-warning': 'true'
-      }
-    });
+    const response = await axios.post(`${API_BASE_URL}/api/v1/web`, { action, data });
     return response.data;
   } catch (error) {
     console.error(`API Error (${action}):`, error);

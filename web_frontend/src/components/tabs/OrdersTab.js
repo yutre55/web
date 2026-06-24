@@ -1,15 +1,21 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '../../utils/icons';
 
 const OrdersTab = ({ orders }) => {
   return (
     <>
-      <header className="mb-12"><motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}><div className="flex items-center gap-2 text-red-500 mb-2"><Icons.Package className="w-4 h-4" /><span className="text-[10px] font-black uppercase tracking-[0.4em]">Encrypted Order History</span></div><h2 className="text-4xl lg:text-5xl font-black tracking-tighter uppercase">Order <span className="text-red-600">History</span></h2></motion.div></header>
+      <header className="mb-12"><motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}><div className="flex items-center gap-2 text-red-500 mb-2"><Icons.Package className="w-4 h-4" /><span className="text-[10px] font-black uppercase tracking-[0.4em]">Encrypted Order History</span></div><h2 className="text-4xl lg:text-5xl font-black tracking-tighter uppercase">Order <span className="text-red-600">History</span></h2></motion.div></header>
       {orders.length === 0 ? <div className="h-[50vh] flex flex-col items-center justify-center text-zinc-600 opacity-20"><Icons.Activity className="w-16 h-16 mb-4" /><p className="font-mono text-sm tracking-widest uppercase">NO_ACTIVE_ORDERS</p></div> : (
         <div className="space-y-6">
-          {orders.map(order => (
-            <div key={order.order_id} className="bg-zinc-900/40 border border-white/5 rounded-3xl p-6 sm:p-8 backdrop-blur-md relative overflow-hidden group">
+          {orders.map((order, index) => (
+            <motion.div
+              key={order.order_id || index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className="bg-zinc-900/40 border border-white/5 rounded-3xl p-6 sm:p-8 backdrop-blur-md relative overflow-hidden group"
+            >
               <div className="flex flex-col lg:flex-row justify-between gap-6 relative z-10">
                 <div className="space-y-4">
                   <div className="flex items-center gap-3"><span className="text-[10px] font-black text-red-500 bg-red-500/10 px-3 py-1 rounded-full border border-red-500/20">{order.order_id}</span><span className="text-[10px] font-mono text-zinc-500">{order.timestamp}</span></div>
@@ -22,7 +28,7 @@ const OrdersTab = ({ orders }) => {
                 </div>
               </div>
               <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity"><Icons.Shield className="w-32 h-32 rotate-12" /></div>
-            </div>
+            </motion.div>
           ))}
         </div>
       )}
@@ -30,4 +36,5 @@ const OrdersTab = ({ orders }) => {
   );
 };
 
-export default OrdersTab;
+export default memo(OrdersTab);
+
