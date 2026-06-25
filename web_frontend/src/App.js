@@ -24,6 +24,7 @@ import CommunityTab from './components/tabs/CommunityTab';
 import HelpTab from './components/tabs/HelpTab';
 import ManagementTab from './components/tabs/ManagementTab';
 import WalletTab from './components/tabs/WalletTab';
+import InstallTab from './components/tabs/InstallTab';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -171,7 +172,7 @@ const App = () => {
       setCurrentUser(res.user);
       if (res.user.cart) setCart(res.user.cart);
     } else {
-      setStatusMessage({ text: `ACCESS_DENIED: ${res.message}`, type: 'error' });
+      setStatusMessage({ text: "ERROR: Invalid username or password. Check credentials.", type: 'error' });
     }
     setIsAuthenticating(false);
   };
@@ -339,6 +340,7 @@ const App = () => {
                       { id: 'wallet', icon: Icons.Zap, label: `Wallet (₹${currentUser?.balance || 0})` },
                       { id: 'orders', icon: Icons.Package, label: "Order History" },
                       { id: 'inbox', icon: Icons.Mail, label: "System Inbox", count: messages.filter(m => !m.read).length },
+                      { id: 'install', icon: Icons.Cpu, label: "Install APK" },
                       { id: 'stats', icon: Icons.Activity, label: "Network Stats" },
                       { id: 'join', icon: Icons.Send, label: "Community" },
                       { id: 'help', icon: Icons.HelpCircle, label: "Help Center" },
@@ -396,6 +398,7 @@ const App = () => {
                 { id: 'wallet', icon: Icons.Zap, label: `Wallet (₹${currentUser?.balance || 0})` },
                 { id: 'orders', icon: Icons.Package, label: "Order History" },
                 { id: 'inbox', icon: Icons.Mail, label: "System Inbox", count: messages.filter(m => !m.read).length },
+                { id: 'install', icon: Icons.Cpu, label: "Install APK" },
                 { id: 'stats', icon: Icons.Activity, label: "Network Stats" },
                 { id: 'join', icon: Icons.Send, label: "Community" },
                 { id: 'help', icon: Icons.HelpCircle, label: "Help Center" },
@@ -428,6 +431,7 @@ const App = () => {
                 }} calculateTotal={calculateTotal} handleOrder={handleOrder} />}
                 {activeTab === 'orders' && <OrdersTab orders={orders} />}
                 {activeTab === 'inbox' && <InboxTab messages={messages} />}
+                {activeTab === 'install' && <InstallTab />}
                 {activeTab === 'wallet' && <WalletTab currentUser={currentUser} setCurrentUser={setCurrentUser} orders={orders} registeredTournaments={registeredTournaments} showNotify={showNotify} />}
                 {activeTab === 'stats' && <StatsTab liveStats={liveStats} graphSeeds={graphSeeds} telemetry={telemetry} />}
                 {activeTab === 'join' && <CommunityTab />}
