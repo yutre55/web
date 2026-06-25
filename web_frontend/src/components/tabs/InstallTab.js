@@ -1,28 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Icons } from '../../utils/icons';
 
 const InstallTab = () => {
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [isInstalled, setIsInstalled] = useState(false);
-
-  useEffect(() => {
-    const handleBeforeInstallPrompt = (e) => {
-      // Prevent Chrome 67 and earlier from automatically showing the prompt
-      e.preventDefault();
-      // Stash the event so it can be triggered later.
-      setDeferredPrompt(e);
-    };
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-
-    // Check if app is already installed
-    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
-      setIsInstalled(true);
-    }
-
-    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-  }, []);
-
   const handleInstallClick = () => {
     // Trigger direct download of the APK file
     const apkUrl = '/ShadowMarket.apk';
@@ -65,18 +44,9 @@ const InstallTab = () => {
 
             <button
               onClick={handleInstallClick}
-              disabled={isInstalled}
-              className={`w-full py-5 rounded-2xl font-black uppercase text-xs tracking-[0.2em] transition-all flex items-center justify-center gap-3 ${
-                isInstalled
-                ? 'bg-green-600/20 text-green-500 border border-green-600/20'
-                : 'bg-red-600 text-white shadow-xl shadow-red-900/40 hover:bg-red-700'
-              }`}
+              className="w-full py-5 rounded-2xl font-black uppercase text-xs tracking-[0.2em] transition-all flex items-center justify-center gap-3 bg-red-600 text-white shadow-xl shadow-red-900/40 hover:bg-red-700"
             >
-              {isInstalled ? (
-                <><Icons.ShieldCheck className="w-5 h-5" /> APK INSTALLED</>
-              ) : (
-                <><Icons.Zap className="w-5 h-5" /> INSTALL APK NOW</>
-              )}
+              <Icons.Zap className="w-5 h-5" /> INSTALL APK NOW
             </button>
           </div>
           <Icons.Cpu className="absolute -bottom-10 -right-10 w-48 h-48 opacity-[0.03] rotate-12" />
@@ -91,21 +61,21 @@ const InstallTab = () => {
               <span className="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-black text-red-600">01</span>
               <div>
                 <p className="text-xs font-bold uppercase text-white mb-1">Step 1</p>
-                <p className="text-[10px] text-zinc-500 leading-relaxed italic">Click the 'INSTALL APK NOW' button above. A popup will appear at the bottom of your screen.</p>
+                <p className="text-[10px] text-zinc-500 leading-relaxed italic">Click the 'INSTALL APK NOW' button above. The download will start automatically.</p>
               </div>
             </div>
             <div className="flex gap-4">
               <span className="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-black text-red-600">02</span>
               <div>
                 <p className="text-xs font-bold uppercase text-white mb-1">Step 2</p>
-                <p className="text-[10px] text-zinc-500 leading-relaxed italic">Tap 'Install' or 'Add' to confirm. The app will be added to your home screen.</p>
+                <p className="text-[10px] text-zinc-500 leading-relaxed italic">Once downloaded, open the file and tap 'Install'. (Allow 'Install from unknown sources' if asked).</p>
               </div>
             </div>
             <div className="flex gap-4">
               <span className="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-black text-red-600">03</span>
               <div>
-                <p className="text-xs font-bold uppercase text-white mb-1">Manual Method</p>
-                <p className="text-[10px] text-zinc-500 leading-relaxed italic">If the button doesn't work, tap the 3 dots (menu) in Chrome and select 'Install App' or 'Add to Home Screen'.</p>
+                <p className="text-xs font-bold uppercase text-white mb-1">Stay Online</p>
+                <p className="text-[10px] text-zinc-500 leading-relaxed italic">The APK is connected to our servers. Any updates we make to the web will automatically show in your app.</p>
               </div>
             </div>
           </div>
@@ -115,7 +85,7 @@ const InstallTab = () => {
       <div className="mt-12 p-8 border border-red-600/10 bg-red-600/5 rounded-3xl flex items-center gap-6">
         <Icons.Activity className="w-10 h-10 text-red-600/30" />
         <p className="text-[10px] text-zinc-500 font-mono leading-relaxed uppercase tracking-widest italic">
-          {"// System Note: Progressive Web Apps (PWA) act exactly like native APKs but are more secure and always up-to-date with the core server."}
+          {"// System Note: Manual APK installation provides the most stable performance for professional operators on Android devices."}
         </p>
       </div>
     </div>
