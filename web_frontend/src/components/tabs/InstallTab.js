@@ -46,30 +46,27 @@ const InstallTab = () => {
       <header className="mb-12">
         <div className="flex items-center gap-2 text-red-500 mb-2">
           <Icons.Shield className="w-4 h-4" />
-          <span className="text-[10px] font-black uppercase tracking-[0.4em]">Native Deployment v1.0</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.4em]">Android Deployment Kit</span>
         </div>
         <h2 className="text-4xl lg:text-5xl font-black tracking-tighter uppercase leading-tight">
-          Install <span className="text-red-600">Shadow Market</span>
+          Android <span className="text-red-600">APK Install</span>
         </h2>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="bg-zinc-900/40 border border-white/5 rounded-[2.5rem] p-8 backdrop-blur-md relative overflow-hidden group">
           <div className="relative z-10">
-            <h3 className="text-2xl font-black uppercase mb-4 italic">Web-to-APK <span className="text-red-600">Sync</span></h3>
+            <h3 className="text-2xl font-black uppercase mb-4 italic">Shadow <span className="text-red-600">Mobile</span></h3>
             <p className="text-zinc-500 text-sm leading-relaxed mb-8">
-              Convert this web interface into a standalone application. Installing the PWA (Progressive Web App) allows you to bypass browser address bars and stay connected with native speed.
+              Download and sync the Shadow Market terminal directly to your Android device. This will install a secure, full-screen APK shortcut on your home screen.
             </p>
 
             <ul className="space-y-4 mb-10">
               <li className="flex items-center gap-3 text-xs font-bold text-zinc-400">
-                <div className="w-1.5 h-1.5 bg-red-600 rounded-full" /> Full Screen Immersion
+                <Icons.ShieldCheck className="w-4 h-4 text-green-500" /> Optimized for Android
               </li>
               <li className="flex items-center gap-3 text-xs font-bold text-zinc-400">
-                <div className="w-1.5 h-1.5 bg-red-600 rounded-full" /> Home Screen Icon Access
-              </li>
-              <li className="flex items-center gap-3 text-xs font-bold text-zinc-400">
-                <div className="w-1.5 h-1.5 bg-red-600 rounded-full" /> Secure Sandbox Environment
+                <Icons.Zap className="w-4 h-4 text-red-600" /> Fast Home Screen Access
               </li>
             </ul>
 
@@ -83,41 +80,39 @@ const InstallTab = () => {
               }`}
             >
               {isInstalled ? (
-                <><Icons.ShieldCheck className="w-5 h-5" /> Already Installed</>
+                <><Icons.ShieldCheck className="w-5 h-5" /> APK INSTALLED</>
               ) : (
-                <><Icons.Zap className="w-5 h-5" /> Deploy as APK</>
+                <><Icons.Zap className="w-5 h-5" /> INSTALL APK NOW</>
               )}
             </button>
           </div>
           <Icons.Cpu className="absolute -bottom-10 -right-10 w-48 h-48 opacity-[0.03] rotate-12" />
         </div>
 
-        <div className="space-y-6">
-          <div className="bg-zinc-900/60 border border-white/10 rounded-[2rem] p-8">
-            <h4 className="text-sm font-black uppercase tracking-widest text-zinc-500 mb-6 flex items-center gap-2">
-              <Icons.Info className="w-4 h-4" /> Installation Guide
-            </h4>
-            <div className="space-y-6">
-              <div className="flex gap-4">
-                <span className="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-black text-red-600">01</span>
-                <div>
-                  <p className="text-xs font-bold uppercase text-white mb-1">Android / Chrome</p>
-                  <p className="text-[10px] text-zinc-500 leading-relaxed italic">Click the 'Deploy as APK' button or tap the three dots in your browser and select 'Install App' or 'Add to Home Screen'.</p>
-                </div>
+        <div className="bg-zinc-900/60 border border-white/10 rounded-[2rem] p-8">
+          <h4 className="text-sm font-black uppercase tracking-widest text-zinc-500 mb-6 flex items-center gap-2">
+            <Icons.Info className="w-4 h-4" /> Android Guide
+          </h4>
+          <div className="space-y-6">
+            <div className="flex gap-4">
+              <span className="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-black text-red-600">01</span>
+              <div>
+                <p className="text-xs font-bold uppercase text-white mb-1">Step 1</p>
+                <p className="text-[10px] text-zinc-500 leading-relaxed italic">Click the 'INSTALL APK NOW' button above. A popup will appear at the bottom of your screen.</p>
               </div>
-              <div className="flex gap-4">
-                <span className="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-black text-red-600">02</span>
-                <div>
-                  <p className="text-xs font-bold uppercase text-white mb-1">iOS (iPhone/iPad)</p>
-                  <p className="text-[10px] text-zinc-500 leading-relaxed italic">Tap the 'Share' icon (square with arrow up) at the bottom, scroll down, and tap 'Add to Home Screen'.</p>
-                </div>
+            </div>
+            <div className="flex gap-4">
+              <span className="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-black text-red-600">02</span>
+              <div>
+                <p className="text-xs font-bold uppercase text-white mb-1">Step 2</p>
+                <p className="text-[10px] text-zinc-500 leading-relaxed italic">Tap 'Install' or 'Add' to confirm. The app will be added to your home screen.</p>
               </div>
-              <div className="flex gap-4">
-                <span className="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-black text-red-600">03</span>
-                <div>
-                  <p className="text-xs font-bold uppercase text-white mb-1">Desktop</p>
-                  <p className="text-[10px] text-zinc-500 leading-relaxed italic">Click the install icon in the right side of the address bar to run Shadow Market as a separate window.</p>
-                </div>
+            </div>
+            <div className="flex gap-4">
+              <span className="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-black text-red-600">03</span>
+              <div>
+                <p className="text-xs font-bold uppercase text-white mb-1">Manual Method</p>
+                <p className="text-[10px] text-zinc-500 leading-relaxed italic">If the button doesn't work, tap the 3 dots (menu) in Chrome and select 'Install App' or 'Add to Home Screen'.</p>
               </div>
             </div>
           </div>
