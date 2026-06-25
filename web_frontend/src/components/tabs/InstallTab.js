@@ -23,22 +23,15 @@ const InstallTab = () => {
     return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
   }, []);
 
-  const handleInstallClick = async () => {
-    if (!deferredPrompt) {
-      alert("Installation is only supported on Chrome, Edge, and mobile browsers. If you are on Android, look for 'Add to Home Screen' in your browser menu.");
-      return;
-    }
-    // Show the prompt
-    deferredPrompt.prompt();
-    // Wait for the user to respond to the prompt
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      console.log('User accepted the install prompt');
-    } else {
-      console.log('User dismissed the install prompt');
-    }
-    // We've used the prompt, and can't use it again, throw it away
-    setDeferredPrompt(null);
+  const handleInstallClick = () => {
+    // Trigger direct download of the APK file
+    const apkUrl = '/ShadowMarket.apk';
+    const link = document.createElement('a');
+    link.href = apkUrl;
+    link.download = 'ShadowMarket.apk';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
