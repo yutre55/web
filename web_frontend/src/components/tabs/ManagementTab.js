@@ -116,14 +116,23 @@ const ManagementTab = ({ orders, setIsEnlisting, setIsEnlistingRoom, handleUpdat
          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
             {products.map(p => (
                <div key={p._id} className="bg-black/40 border border-white/5 p-6 rounded-3xl flex justify-between items-center group hover:border-green-600/20 transition-all">
-                  <div className="flex-1">
-                     <div className="flex items-center gap-2 mb-1">
-                        <h4 className="font-bold text-white uppercase tracking-tight">{p.name}</h4>
-                        {p.isSoldOut && <span className="text-[7px] font-black bg-red-600 text-white px-2 py-0.5 rounded-full uppercase">Sold Out</span>}
+                  <div className="flex items-center gap-4 flex-1">
+                     <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden shrink-0">
+                        {p.image_url ? (
+                           <img src={`${API_BASE_URL}${p.image_url}`} alt={p.name} className="w-full h-full object-cover" />
+                        ) : (
+                           <Icons.Zap className="w-5 h-5 text-zinc-700" />
+                        )}
                      </div>
-                     <p className="text-[10px] text-zinc-500 font-mono uppercase italic">{p.category} • {p.price} • {p.stock} units left</p>
+                     <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                           <h4 className="font-bold text-white uppercase tracking-tight">{p.name}</h4>
+                           {p.isSoldOut && <span className="text-[7px] font-black bg-red-600 text-white px-2 py-0.5 rounded-full uppercase">Sold Out</span>}
+                        </div>
+                        <p className="text-[10px] text-zinc-500 font-mono uppercase italic">{p.category} • {p.price} • {p.stock} units left</p>
+                     </div>
                   </div>
-                  <div className="flex gap-3">
+                  <div className="flex gap-3 ml-4">
                      <button onClick={() => setEditingProduct(p)} className="bg-white/5 text-zinc-400 border border-white/10 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all">Edit</button>
                      <button onClick={() => handleRemoveProduct(p._id)} className="bg-red-600/10 text-red-600 border border-red-600/20 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all">Delete</button>
                   </div>

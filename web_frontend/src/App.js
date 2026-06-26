@@ -301,9 +301,9 @@ const App = () => {
 
         <div className="pt-20 sm:pt-24 pb-24 sm:pb-0 flex min-h-screen relative z-20">
           <AnimatePresence>
-            <EnlistAssetModal isOpen={isEnlisting} onClose={() => setIsEnlisting(false)} onSubmit={handleEnlist} newProduct={newProduct} setNewProduct={setNewProduct} />
+            <EnlistAssetModal isOpen={isEnlisting} onClose={() => setIsEnlisting(false)} onSubmit={handleEnlist} newProduct={newProduct} setNewProduct={setNewProduct} currentUser={currentUser} />
             <DeployRoomModal isOpen={isEnlistingRoom} onClose={() => setIsEnlistingRoom(false)} onSubmit={handleDeployRoom} newRoom={newRoom} setNewRoom={setNewRoom} />
-            <EditAssetModal isOpen={!!editingProduct} onClose={() => setEditingProduct(null)} onSubmit={handleEditProduct} asset={editingProduct} />
+            <EditAssetModal isOpen={!!editingProduct} onClose={() => setEditingProduct(null)} onSubmit={handleEditProduct} asset={editingProduct} currentUser={currentUser} />
 
             {/* Mobile Navigation Sidebar */}
             {isMobileMenuOpen && (

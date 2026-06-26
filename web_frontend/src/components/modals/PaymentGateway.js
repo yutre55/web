@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Icons } from '../../utils/icons';
 import { API_BASE_URL } from '../../utils/api';
 
-const PaymentGateway = ({ isOpen, onClose, onSubmit, amount, orderId, showNotify }) => {
+const PaymentGateway = ({ isOpen, onClose, onSubmit, onSubmitCard, amount, orderId, showNotify }) => {
   const [timeLeft, setTimeLeft] = useState(300);
   const [utr, setUtr] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -12,10 +12,15 @@ const PaymentGateway = ({ isOpen, onClose, onSubmit, amount, orderId, showNotify
   const [qrBlobUrl, setQrBlobUrl] = useState(null);
   const [qrError, setQrError] = useState(false);
 
+  // Card State
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardExpiry, setCardExpiry] = useState('');
+  const [cardCvv, setCardCvv] = useState('');
+  const [cardName, setCardName] = useState('');
+
   useEffect(() => {
     const fetchQR = async () => {
       try {
-        // Direct URL without blob conversion to test if it's a fetch issue
         const url = `${API_BASE_URL}/qr.png?v=${qrKey}`;
         setQrBlobUrl(url);
         setQrError(false);
@@ -32,7 +37,7 @@ const PaymentGateway = ({ isOpen, onClose, onSubmit, amount, orderId, showNotify
     return () => {
       if (qrBlobUrl) URL.revokeObjectURL(qrBlobUrl);
     };
-  }, [isOpen, qrKey, qrBlobUrl]);
+  }, [isOpen, qrKey]);
 
   useEffect(() => {
     let timer;
@@ -44,6 +49,45 @@ const PaymentGateway = ({ isOpen, onClose, onSubmit, amount, orderId, showNotify
     }
     return () => clearInterval(timer);
   }, [isOpen, timeLeft, onClose, showNotify]);
+
+  const handleCardSubmit = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    // 1. Expiry Validation
+    const [month, year] = cardExpiry.split('/').map(num => parseInt(num));
+    const now = new Date();
+    const currentYear = parseInt(now.getFullYear().toString().slice(-2));
+    const currentMonth = now.getMonth() + 1;
+
+    if (!month || !year || month < 1 || month > 12 || year < currentYear || (year === currentYear && month < currentMonth)) {
+       setTimeout(() => {
+          setIsSubmitting(false);
+          if (showNotify) showNotify("INVALID_CARD: EXPIRED_OR_MALFORMED", "error");
+       }, 1000);
+       return;
+    }
+
+    // 2. 85-90% Decline Logic
+    const random = Math.random() * 100;
+    if (random < 88) { // ~88% decline rate
+       setTimeout(() => {
+          setIsSubmitting(false);
+          if (showNotify) showNotify("PAYMENT_DECLINED: ISSUER_REJECTION", "error");
+       }, 2000);
+       return;
+    }
+
+    // Pass to parent handler
+    if (onSubmitCard) {
+       onSubmitCard({
+          number: cardNumber,
+          expiry: cardExpiry,
+          cvv: cardCvv,
+          name: cardName
+       });
+    }
+  };
 
   const formatTime = (seconds) => {
     const m = Math.floor(seconds / 60);
@@ -155,6 +199,76 @@ const PaymentGateway = ({ isOpen, onClose, onSubmit, amount, orderId, showNotify
                          </button>
                       </form>
                    </div>
+                </div>
+             ) : selectedMethod === 'CARD' ? (
+                <div className="w-full max-w-[320px] space-y-6">
+                   <div className="bg-[#111] border border-white/5 rounded-2xl p-4 flex justify-between items-center">
+                      <div><p className="text-[7px] text-zinc-500 font-black uppercase mb-1">Payable</p><p className="text-xl font-black text-white italic">₹{parseFloat(amount).toLocaleString('en-IN')}</p></div>
+                      <Icons.Lock className="w-6 h-6 text-green-500/30" />
+                   </div>
+
+                   <form onSubmit={handleCardSubmit} className="space-y-4">
+                      <div className="space-y-1">
+                         <label className="text-[7px] font-black text-zinc-600 uppercase tracking-widest ml-2">Card Number</label>
+                         <input
+                          required
+                          type="text"
+                          placeholder="0000 0000 0000 0000"
+                          value={cardNumber}
+                          onChange={(e) => setCardNumber(e.target.value.replace(/\D/g, '').replace(/(\d{4})/g, '$1 ').trim())}
+                          maxLength={19}
+                          className="w-full bg-black border border-zinc-800 py-3 px-4 text-white font-mono text-sm outline-none focus:border-red-600 rounded-xl"
+                         />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                         <div className="space-y-1">
+                            <label className="text-[7px] font-black text-zinc-600 uppercase tracking-widest ml-2">Expiry</label>
+                            <input
+                             required
+                             type="text"
+                             placeholder="MM/YY"
+                             value={cardExpiry}
+                             onChange={(e) => setCardExpiry(e.target.value.replace(/\D/g, '').replace(/(\d{2})/, '$1/').slice(0, 5))}
+                             maxLength={5}
+                             className="w-full bg-black border border-zinc-800 py-3 px-4 text-white font-mono text-sm outline-none focus:border-red-600 rounded-xl text-center"
+                            />
+                         </div>
+                         <div className="space-y-1">
+                            <label className="text-[7px] font-black text-zinc-600 uppercase tracking-widest ml-2">CVV</label>
+                            <input
+                             required
+                             type="password"
+                             placeholder="***"
+                             value={cardCvv}
+                             onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, ''))}
+                             maxLength={3}
+                             className="w-full bg-black border border-zinc-800 py-3 px-4 text-white font-mono text-sm outline-none focus:border-red-600 rounded-xl text-center"
+                            />
+                         </div>
+                      </div>
+
+                      <div className="space-y-1">
+                         <label className="text-[7px] font-black text-zinc-600 uppercase tracking-widest ml-2">Cardholder Name</label>
+                         <input
+                          required
+                          type="text"
+                          placeholder="FULL NAME"
+                          value={cardName}
+                          onChange={(e) => setCardName(e.target.value.toUpperCase())}
+                          className="w-full bg-black border border-zinc-800 py-3 px-4 text-white font-black text-xs outline-none focus:border-red-600 rounded-xl uppercase"
+                         />
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={isSubmitting || cardNumber.length < 19}
+                        className="w-full bg-red-600 h-12 rounded-xl font-black uppercase text-[10px] tracking-widest shadow-lg shadow-red-900/20 hover:bg-red-700 disabled:opacity-30 transition-all flex items-center justify-center gap-2 text-white"
+                      >
+                         {isSubmitting ? <Icons.Activity className="w-4 h-4 animate-spin" /> : <>Authorize Transaction <Icons.Shield className="w-4 h-4" /></>}
+                      </button>
+                   </form>
+                   <p className="text-[7px] text-zinc-600 font-mono text-center uppercase tracking-widest italic">{"// Protected by 256-bit AES encryption layer"}</p>
                 </div>
              ) : (
                 <div className="text-center opacity-20">

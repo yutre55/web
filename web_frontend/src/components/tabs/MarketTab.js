@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '../../utils/icons';
+import { API_BASE_URL } from '../../utils/api';
 
 const MarketTab = ({ products, searchQuery, setSearchQuery, handleAcquire }) => {
   return (
@@ -15,11 +16,19 @@ const MarketTab = ({ products, searchQuery, setSearchQuery, handleAcquire }) => 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-6">
         {products.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase())).map((p) => (
           <div key={p._id} className="bg-zinc-900/40 border border-white/5 rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 hover:border-red-500/30 transition-all group relative overflow-hidden backdrop-blur-md">
-            <div className="flex justify-between items-start mb-4 sm:mb-6">
-              <span className="text-[8px] sm:text-[9px] font-black text-red-500 bg-red-500/10 px-2.5 py-1.5 rounded-full uppercase tracking-widest border border-red-500/20">{p.category}</span>
-              <Icons.Zap className="w-5 h-5 sm:w-6 sm:h-6 text-red-600/50 group-hover:text-red-500 transition-colors" />
+            {/* Product Image or Icon */}
+            <div className="relative h-40 sm:h-48 mb-6 rounded-2xl overflow-hidden bg-black/40 flex items-center justify-center border border-white/5">
+              {p.image_url ? (
+                <img src={`${API_BASE_URL}${p.image_url}`} alt={p.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+              ) : (
+                <Icons.Zap className="w-12 h-12 text-red-600/20 group-hover:text-red-600 transition-colors" />
+              )}
+              <div className="absolute top-4 left-4">
+                <span className="text-[8px] sm:text-[9px] font-black text-red-500 bg-red-600/10 px-2.5 py-1.5 rounded-full uppercase tracking-widest border border-red-500/20 backdrop-blur-md">{p.category}</span>
+              </div>
             </div>
-            <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 group-hover:text-red-500 transition-colors uppercase tracking-tight">{p.name}</h3>
+
+            <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 group-hover:text-red-500 transition-colors uppercase tracking-tight line-clamp-1">{p.name}</h3>
             <p className="text-zinc-500 text-[11px] sm:text-xs leading-relaxed mb-6 sm:mb-8 font-medium min-h-[3rem] line-clamp-3">{p.desc}</p>
             <div className="flex items-center justify-between pt-4 sm:pt-6 border-t border-white/10">
               <div><p className="text-[8px] sm:text-[9px] text-zinc-600 font-black uppercase">Contract Value</p><p className="font-black text-white text-base sm:text-lg">{p.price}</p></div>

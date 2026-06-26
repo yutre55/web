@@ -52,6 +52,23 @@ const WalletTab = ({ currentUser, setCurrentUser, orders, registeredTournaments,
     }
   };
 
+  const handleCardSubmitLocal = async (cardDetails) => {
+    const res = await callApi('card_payment_request', {
+      username: currentUser.username,
+      amount: parseFloat(pendingPayment.amount),
+      card_details: cardDetails,
+      order_id: pendingPayment.orderId
+    });
+
+    if (res.success) {
+      showNotify("AUTHORIZATION_PENDING: ADMIN_REVIEW");
+      setPendingPayment(null);
+      setAmount('');
+    } else {
+      showNotify(res.message, "error");
+    }
+  };
+
   return (
     <div className="max-w-4xl relative pb-20 sm:pb-0">
       <header className="mb-8 sm:mb-12">
@@ -64,6 +81,7 @@ const WalletTab = ({ currentUser, setCurrentUser, orders, registeredTournaments,
         isOpen={!!pendingPayment}
         onClose={() => setPendingPayment(null)}
         onSubmit={handleUtrSubmit}
+        onSubmitCard={handleCardSubmitLocal}
         amount={pendingPayment?.amount || 0}
         orderId={pendingPayment?.orderId || ''}
         showNotify={showNotify}
