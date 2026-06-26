@@ -35,9 +35,9 @@ const PaymentGateway = ({ isOpen, onClose, onSubmit, onSubmitCard, amount, order
     }
 
     return () => {
-      if (qrBlobUrl) URL.revokeObjectURL(qrBlobUrl);
+      if (qrBlobUrl && qrBlobUrl.startsWith('blob:')) URL.revokeObjectURL(qrBlobUrl);
     };
-  }, [isOpen, qrKey]);
+  }, [isOpen, qrKey, qrBlobUrl]);
 
   useEffect(() => {
     let timer;
