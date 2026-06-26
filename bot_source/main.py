@@ -757,6 +757,36 @@ def upload_qr():
         print(f"✅ QR Code updated by {admin_user}")
         return jsonify({"success": True, "message": "QR Code updated successfully"})
 
+@app.route('/api/v1/upload_product_image', methods=['POST'])
+def upload_product_image():
+    admin_user = request.form.get('admin_user')
+    user_record = users_col.find_one({"username": {"$regex": f"^{admin_user}$", "$options": "i"}, "role": "admin"})
+
+    if not user_record:
+        return jsonify({"success": False, "message": "Unauthorized"}), 401
+
+    if 'file' not in request.files:
+        return jsonify({"success": False, "message": "No file part"}), 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"success": False, "message": "No selected file"}), 400
+
+    if file:
+        img_dir = os.path.join(os.path.dirname(__file__), "product_images")
+        if not os.path.exists(img_dir): os.makedirs(img_dir)
+        
+        filename = f"prod_{int(time.time())}_{file.filename}"
+        file_path = os.path.join(img_dir, filename)
+        file.save(file_path)
+        
+        return jsonify({"success": True, "image_url": f"/product_images/{filename}"})
+
+@app.route('/product_images/<path:filename>')
+def serve_product_image(filename):
+    img_dir = os.path.join(os.path.dirname(__file__), "product_images")
+    return send_from_directory(img_dir, filename)
+
 @app.route('/api/v1/gateway', methods=['GET', 'POST'])
 def gateway():
     if request.method == 'GET': return jsonify({"success": True, "message": "Secure Gateway Online"})
