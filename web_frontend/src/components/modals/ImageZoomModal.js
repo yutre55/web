@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../utils/icons';
 
 const ImageZoomModal = ({ isOpen, onClose, imageUrl, altText }) => {
   const [zoomStyle, setZoomStyle] = useState({ display: 'none' });
+  const constraintsRef = useRef(null);
 
   if (!isOpen) return null;
 
-  // Desktop Hover Zoom Logic
+  // Desktop Hover Zoom Logic (Amazon Style)
   const handleMouseMove = (e) => {
     const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
     const x = ((e.pageX - left) / width) * 100;
@@ -16,7 +17,7 @@ const ImageZoomModal = ({ isOpen, onClose, imageUrl, altText }) => {
       display: 'block',
       backgroundImage: `url(${imageUrl})`,
       backgroundPosition: `${x}% ${y}%`,
-      backgroundSize: '250%' // Zoom level
+      backgroundSize: '250%'
     });
   };
 
@@ -30,115 +31,92 @@ const ImageZoomModal = ({ isOpen, onClose, imageUrl, altText }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[200] flex items-center justify-center p-0 sm:p-4 bg-black/95 backdrop-blur-2xl overflow-hidden"
+        className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 backdrop-blur-2xl overflow-hidden"
       >
         <motion.div
-          initial={{ y: "100%", opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: "100%", opacity: 0 }}
+          initial={{ y: "100%" }}
+          animate={{ y: 0 }}
+          exit={{ y: "100%" }}
           transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-          className="relative bg-zinc-900 border-t sm:border border-white/10 w-full max-w-5xl h-full sm:h-auto sm:rounded-[2.5rem] flex flex-col lg:flex-row shadow-2xl overflow-y-auto sm:overflow-hidden"
+          className="relative bg-zinc-900 w-full h-full sm:h-[90vh] sm:max-w-6xl sm:rounded-[2.5rem] flex flex-col lg:flex-row shadow-2xl overflow-hidden"
         >
-          {/* Mobile Handle / Close Button */}
-          <div className="flex items-center justify-between p-6 sm:hidden border-b border-white/5 sticky top-0 bg-zinc-900 z-20">
-             <h3 className="text-sm font-black uppercase tracking-widest text-white">Asset Preview</h3>
-             <button onClick={onClose} className="p-2 bg-white/5 rounded-full text-zinc-400">
+          {/* Mobile Header: Fixed at top */}
+          <div className="flex items-center justify-between p-5 sm:p-8 border-b border-white/5 bg-zinc-900/80 backdrop-blur-md z-30">
+             <div className="flex flex-col">
+                <span className="text-[8px] font-black text-red-500 uppercase tracking-[0.3em] mb-1">Asset_Viewer</span>
+                <h3 className="text-xs sm:text-lg font-black uppercase tracking-widest text-white truncate max-w-[200px] sm:max-w-none">{altText}</h3>
+             </div>
+             <button onClick={onClose} className="p-3 bg-white/5 hover:bg-red-600 rounded-xl text-zinc-400 hover:text-white transition-all border border-white/5">
                <Icons.X className="w-5 h-5" />
              </button>
           </div>
 
-          {/* Desktop Close Button */}
-          <button
-            onClick={onClose}
-            className="absolute top-8 right-8 p-2.5 bg-black/40 hover:bg-red-600 rounded-full text-white/50 hover:text-white transition-all z-30 hidden sm:block border border-white/5"
-          >
-            <Icons.X className="w-6 h-6" />
-          </button>
-
-          {/* Left: Image Section (Mobile: Top) */}
-          <div className="flex-1 bg-black/20 relative group overflow-hidden flex flex-col">
-             <div
-               className="relative flex-1 min-h-[50vh] sm:min-h-[600px] flex items-center justify-center cursor-zoom-in sm:cursor-crosshair"
-               onMouseMove={handleMouseMove}
-               onMouseLeave={handleMouseLeave}
-             >
-                {/* Mobile: Pinch-to-Zoom enabled image */}
-                <motion.img
-                  drag
-                  dragConstraints={{ left: -300, right: 300, top: -300, bottom: 300 }}
-                  whileTap={{ scale: 1.2 }}
-                  src={imageUrl}
-                  alt={altText}
-                  className="w-full h-full object-contain p-4 sm:p-12 transition-transform duration-200"
-                />
-
-                {/* Desktop: Zoom Glass Overlay */}
+          <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+            {/* Left Section: The Image Display (Strictly contained for Mobile) */}
+            <div className="flex-1 relative bg-black/40 flex items-center justify-center p-4 sm:p-0 overflow-hidden" ref={constraintsRef}>
+                {/* Desktop: Magnifying Glass Effect */}
                 <div
-                  className="absolute inset-0 pointer-events-none hidden lg:block"
-                  style={{
-                    ...zoomStyle,
-                    backgroundColor: '#09090b',
-                    zIndex: 10
-                  }}
+                  className="absolute inset-0 pointer-events-none hidden lg:block z-20"
+                  style={zoomStyle}
                 />
-             </div>
 
-             {/* Interaction Hint */}
-             <div className="p-4 bg-black/40 border-t border-white/5 text-center">
-                <p className="text-[9px] text-zinc-500 font-black uppercase tracking-[0.3em] block sm:hidden">
-                  Tap & Hold to Zoom | Drag to Pan
-                </p>
-                <p className="text-[9px] text-zinc-500 font-black uppercase tracking-[0.3em] hidden sm:block">
-                  Hover to Magnify | Drag to Pan Detail
-                </p>
-             </div>
-          </div>
+                {/* Main Image View */}
+                <div
+                  className="relative w-full h-full flex items-center justify-center cursor-zoom-in sm:cursor-crosshair"
+                  onMouseMove={handleMouseMove}
+                  onMouseLeave={handleMouseLeave}
+                >
+                    <motion.img
+                      drag
+                      dragConstraints={constraintsRef}
+                      dragElastic={0.1}
+                      whileTap={{ scale: 1.1 }}
+                      src={imageUrl}
+                      alt={altText}
+                      className="max-w-full max-h-full object-contain pointer-events-auto shadow-2xl"
+                      style={{ touchAction: 'none' }} // Prevents browser scrolling while dragging
+                    />
+                </div>
 
-          {/* Right: Product Info (Mobile: Bottom) */}
-          <div className="w-full lg:w-[400px] p-8 sm:p-12 flex flex-col bg-zinc-900 border-l border-white/5 relative z-10">
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-6">
-                <span className="text-[9px] font-black text-red-500 bg-red-600/10 px-3 py-1.5 rounded-full uppercase tracking-widest border border-red-500/20">Security_Verified</span>
-                <span className="text-[9px] font-black text-zinc-500 bg-white/5 px-3 py-1.5 rounded-full uppercase tracking-widest border border-white/10">v4.2</span>
-              </div>
-
-              <h2 className="text-3xl sm:text-4xl font-black uppercase tracking-tighter text-white mb-4 leading-none">{altText}</h2>
-              <div className="h-1.5 w-16 bg-red-600 mb-8 rounded-full" />
-
-              <div className="space-y-6">
-                 <div>
-                    <h4 className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-2">Technical Summary</h4>
-                    <p className="text-zinc-400 text-sm leading-relaxed font-medium">
-                      High-integrity cryptographic asset optimized for multi-node deployments. Features advanced stealth protocols and real-time telemetry monitoring.
+                {/* Interaction Overlay */}
+                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 px-4 py-2 bg-black/60 backdrop-blur-md border border-white/5 rounded-full z-10 pointer-events-none">
+                    <p className="text-[8px] font-black text-zinc-500 uppercase tracking-widest whitespace-nowrap">
+                        Mobile: Pinch & Drag within frame | Desktop: Hover to Magnify
                     </p>
-                 </div>
-
-                 <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
-                       <p className="text-[8px] text-zinc-500 font-black uppercase mb-1">Status</p>
-                       <p className="text-xs font-bold text-green-500 uppercase">Operational</p>
-                    </div>
-                    <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
-                       <p className="text-[8px] text-zinc-500 font-black uppercase mb-1">Origin</p>
-                       <p className="text-xs font-bold text-white uppercase">Shadow_V4</p>
-                    </div>
-                 </div>
-              </div>
+                </div>
             </div>
 
-            <div className="mt-12 space-y-3">
-                <button
-                  onClick={onClose}
-                  className="w-full bg-red-600 hover:bg-red-700 text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest transition-all shadow-xl shadow-red-900/20"
-                >
-                  Confirm Asset Details
-                </button>
-                <button
-                  onClick={onClose}
-                  className="w-full bg-white/5 hover:bg-white/10 text-zinc-400 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all"
-                >
-                  Close Terminal
-                </button>
+            {/* Right Section: Details (Scrollable on Mobile) */}
+            <div className="w-full lg:w-[380px] bg-zinc-900 border-t lg:border-t-0 lg:border-l border-white/10 p-6 sm:p-10 flex flex-col overflow-y-auto max-h-[40vh] lg:max-h-none">
+                <div className="flex-1 space-y-8">
+                    <div className="space-y-4">
+                        <div className="h-1 w-12 bg-red-600 rounded-full" />
+                        <h4 className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Encrypted Technical Specs</h4>
+                        <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed font-medium">
+                            This asset is verified for high-stakes operations. Optimized for speed and stealth in shadow market environments.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="p-4 bg-white/5 rounded-2xl border border-white/5">
+                            <span className="text-[7px] text-zinc-500 font-black uppercase block mb-1">Integrity</span>
+                            <span className="text-[10px] font-bold text-white">100% SECURE</span>
+                        </div>
+                        <div className="p-4 bg-white/5 rounded-2xl border border-white/5">
+                            <span className="text-[7px] text-zinc-500 font-black uppercase block mb-1">Network</span>
+                            <span className="text-[10px] font-bold text-white">V4 PROTOCOL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mt-8 pt-8 border-t border-white/5">
+                    <button
+                        onClick={onClose}
+                        className="w-full bg-white text-black py-4 rounded-xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-red-600 hover:text-white transition-all shadow-xl shadow-white/5"
+                    >
+                        Return to Terminal
+                    </button>
+                </div>
             </div>
           </div>
         </motion.div>
