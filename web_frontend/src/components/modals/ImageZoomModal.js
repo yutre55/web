@@ -10,7 +10,6 @@ const ImageZoomModal = ({ isOpen, onClose, imageUrl, altText }) => {
 
   // Desktop-Only Hover Zoom Logic
   const handleMouseMove = (e) => {
-    // Only trigger if screen is large (lg breakpoint)
     if (window.innerWidth < 1024) return;
 
     const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
@@ -55,16 +54,13 @@ const ImageZoomModal = ({ isOpen, onClose, imageUrl, altText }) => {
           </div>
 
           <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-            {/* Image Display Area */}
+            {/* Image Area */}
             <div className="flex-1 relative bg-black/40 flex items-center justify-center p-4 sm:p-0 overflow-hidden" ref={constraintsRef}>
-
-                {/* Desktop-ONLY Magnifying Glass (Hidden on mobile via 'hidden lg:block') */}
                 <div
                   className="absolute inset-0 pointer-events-none hidden lg:block z-20"
                   style={zoomStyle}
                 />
 
-                {/* Interaction Area */}
                 <div
                   className="relative w-full h-full flex items-center justify-center cursor-default lg:cursor-crosshair"
                   onMouseMove={handleMouseMove}
@@ -81,23 +77,17 @@ const ImageZoomModal = ({ isOpen, onClose, imageUrl, altText }) => {
                       style={{ touchAction: 'none' }}
                     />
                 </div>
-
-                {/* Interaction Instruction Overlay */}
-                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 px-4 py-2 bg-black/60 backdrop-blur-md border border-white/5 rounded-full z-10 pointer-events-none">
-                    <p className="text-[8px] font-black text-zinc-500 uppercase tracking-widest whitespace-nowrap">
-                        <span className="lg:hidden">Drag to Pan Asset</span>
-                        <span className="hidden lg:inline">Hover to Magnify | Drag to Pan</span>
-                    </p>
-                </div>
             </div>
 
-            {/* Details Section */}
-            <div className="w-full lg:w-[380px] bg-zinc-900 border-t lg:border-t-0 lg:border-l border-white/10 p-6 sm:p-10 flex flex-col overflow-y-auto max-h-[40vh] lg:max-h-none">
-                <div className="flex-1 space-y-8">
+            {/* Details/Action Section */}
+            <div className="w-full lg:w-[380px] bg-zinc-900 border-t lg:border-t-0 lg:border-l border-white/10 p-6 sm:p-10 flex flex-col justify-between">
+
+                {/* Desktop-Only Details (Hidden on Mobile) */}
+                <div className="hidden lg:block space-y-8">
                     <div className="space-y-4">
                         <div className="h-1 w-12 bg-red-600 rounded-full" />
                         <h4 className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Encrypted Technical Specs</h4>
-                        <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed font-medium">
+                        <p className="text-zinc-400 text-sm leading-relaxed font-medium">
                             This asset is verified for high-stakes operations. Optimized for speed and stealth in shadow market environments.
                         </p>
                     </div>
@@ -114,10 +104,11 @@ const ImageZoomModal = ({ isOpen, onClose, imageUrl, altText }) => {
                     </div>
                 </div>
 
-                <div className="mt-8 pt-8 border-t border-white/5">
+                {/* Return Button (Visible on all, positioned at bottom) */}
+                <div className="mt-auto pt-4 sm:pt-8 lg:border-t lg:border-white/5">
                     <button
                         onClick={onClose}
-                        className="w-full bg-white text-black py-4 rounded-xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-red-600 hover:text-white transition-all shadow-xl shadow-white/5"
+                        className="w-full bg-white text-black py-4 sm:py-5 rounded-xl sm:rounded-2xl font-black uppercase text-xs tracking-[0.2em] hover:bg-red-600 hover:text-white transition-all shadow-xl shadow-white/5"
                     >
                         Return to Terminal
                     </button>
