@@ -8,8 +8,11 @@ const ImageZoomModal = ({ isOpen, onClose, imageUrl, altText }) => {
 
   if (!isOpen) return null;
 
-  // Desktop Hover Zoom Logic (Amazon Style)
+  // Desktop-Only Hover Zoom Logic
   const handleMouseMove = (e) => {
+    // Only trigger if screen is large (lg breakpoint)
+    if (window.innerWidth < 1024) return;
+
     const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
     const x = ((e.pageX - left) / width) * 100;
     const y = ((e.pageY - top) / height) * 100;
@@ -40,7 +43,7 @@ const ImageZoomModal = ({ isOpen, onClose, imageUrl, altText }) => {
           transition={{ type: 'spring', damping: 30, stiffness: 300 }}
           className="relative bg-zinc-900 w-full h-full sm:h-[90vh] sm:max-w-6xl sm:rounded-[2.5rem] flex flex-col lg:flex-row shadow-2xl overflow-hidden"
         >
-          {/* Mobile Header: Fixed at top */}
+          {/* Header */}
           <div className="flex items-center justify-between p-5 sm:p-8 border-b border-white/5 bg-zinc-900/80 backdrop-blur-md z-30">
              <div className="flex flex-col">
                 <span className="text-[8px] font-black text-red-500 uppercase tracking-[0.3em] mb-1">Asset_Viewer</span>
@@ -52,17 +55,18 @@ const ImageZoomModal = ({ isOpen, onClose, imageUrl, altText }) => {
           </div>
 
           <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-            {/* Left Section: The Image Display (Strictly contained for Mobile) */}
+            {/* Image Display Area */}
             <div className="flex-1 relative bg-black/40 flex items-center justify-center p-4 sm:p-0 overflow-hidden" ref={constraintsRef}>
-                {/* Desktop: Magnifying Glass Effect */}
+
+                {/* Desktop-ONLY Magnifying Glass (Hidden on mobile via 'hidden lg:block') */}
                 <div
                   className="absolute inset-0 pointer-events-none hidden lg:block z-20"
                   style={zoomStyle}
                 />
 
-                {/* Main Image View */}
+                {/* Interaction Area */}
                 <div
-                  className="relative w-full h-full flex items-center justify-center cursor-zoom-in sm:cursor-crosshair"
+                  className="relative w-full h-full flex items-center justify-center cursor-default lg:cursor-crosshair"
                   onMouseMove={handleMouseMove}
                   onMouseLeave={handleMouseLeave}
                 >
@@ -74,19 +78,20 @@ const ImageZoomModal = ({ isOpen, onClose, imageUrl, altText }) => {
                       src={imageUrl}
                       alt={altText}
                       className="max-w-full max-h-full object-contain pointer-events-auto shadow-2xl"
-                      style={{ touchAction: 'none' }} // Prevents browser scrolling while dragging
+                      style={{ touchAction: 'none' }}
                     />
                 </div>
 
-                {/* Interaction Overlay */}
+                {/* Interaction Instruction Overlay */}
                 <div className="absolute bottom-6 left-1/2 -translate-x-1/2 px-4 py-2 bg-black/60 backdrop-blur-md border border-white/5 rounded-full z-10 pointer-events-none">
                     <p className="text-[8px] font-black text-zinc-500 uppercase tracking-widest whitespace-nowrap">
-                        Mobile: Pinch & Drag within frame | Desktop: Hover to Magnify
+                        <span className="lg:hidden">Drag to Pan Asset</span>
+                        <span className="hidden lg:inline">Hover to Magnify | Drag to Pan</span>
                     </p>
                 </div>
             </div>
 
-            {/* Right Section: Details (Scrollable on Mobile) */}
+            {/* Details Section */}
             <div className="w-full lg:w-[380px] bg-zinc-900 border-t lg:border-t-0 lg:border-l border-white/10 p-6 sm:p-10 flex flex-col overflow-y-auto max-h-[40vh] lg:max-h-none">
                 <div className="flex-1 space-y-8">
                     <div className="space-y-4">
