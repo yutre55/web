@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Icons } from '../../utils/icons';
 import { API_BASE_URL } from '../../utils/api';
 
-const MarketTab = ({ products, searchQuery, setSearchQuery, handleAcquire }) => {
+const MarketTab = ({ products, searchQuery, setSearchQuery, handleAcquire, onZoomImage }) => {
   return (
     <>
       <header className="mb-8 sm:mb-12 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
@@ -17,7 +17,10 @@ const MarketTab = ({ products, searchQuery, setSearchQuery, handleAcquire }) => 
         {products.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase())).map((p) => (
           <div key={p._id} className="bg-zinc-900/40 border border-white/5 rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 hover:border-red-500/30 transition-all group relative overflow-hidden backdrop-blur-md">
             {/* Product Image or Icon */}
-            <div className="relative h-40 sm:h-48 mb-6 rounded-2xl overflow-hidden bg-black/40 flex items-center justify-center border border-white/5">
+            <div
+              className="relative h-40 sm:h-48 mb-6 rounded-2xl overflow-hidden bg-black/40 flex items-center justify-center border border-white/5 cursor-zoom-in"
+              onClick={() => p.image_url && onZoomImage(`${API_BASE_URL}${p.image_url}`, p.name)}
+            >
               {p.image_url ? (
                 <img src={`${API_BASE_URL}${p.image_url}`} alt={p.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
               ) : (
@@ -31,7 +34,7 @@ const MarketTab = ({ products, searchQuery, setSearchQuery, handleAcquire }) => 
             <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 group-hover:text-red-500 transition-colors uppercase tracking-tight line-clamp-1">{p.name}</h3>
             <p className="text-zinc-500 text-[11px] sm:text-xs leading-relaxed mb-6 sm:mb-8 font-medium min-h-[3rem] line-clamp-3">{p.desc}</p>
             <div className="flex items-center justify-between pt-4 sm:pt-6 border-t border-white/10">
-              <div><p className="text-[8px] sm:text-[9px] text-zinc-600 font-black uppercase">Contract Value</p><p className="font-black text-white text-base sm:text-lg">{p.price}</p></div>
+              <div><p className="text-[8px] sm:text-[9px] text-zinc-600 font-black uppercase">Contract Value</p><p className="font-black text-white text-base sm:text-lg">₹{p.price}</p></div>
               <button onClick={() => handleAcquire(p)} className="bg-white text-black hover:bg-red-600 hover:text-white text-[9px] sm:text-[10px] font-black px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl transition-all uppercase tracking-widest">Acquire</button>
             </div>
           </div>

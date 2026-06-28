@@ -19,6 +19,15 @@ const getBaseUrl = () => {
 
 export const API_BASE_URL = getBaseUrl();
 
+export const pingServer = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/v1/ping`);
+    return response.ok;
+  } catch {
+    return false;
+  }
+};
+
 export const callApi = async (action, data = {}) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/api/v1/web`, { action, data });

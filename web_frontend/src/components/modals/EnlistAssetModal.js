@@ -57,7 +57,25 @@ const EnlistAssetModal = ({ isOpen, onClose, onSubmit, newProduct, setNewProduct
 
           <div className="space-y-2"><label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-2">Asset Name</label><input required type="text" value={newProduct.name} onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })} className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 text-sm focus:border-red-600 outline-none transition-all" placeholder="Enter name..." /></div>
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2"><label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-2">Price (₹)</label><input required type="text" value={newProduct.price} onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })} className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 text-sm focus:border-red-600 outline-none transition-all" placeholder="₹4,500" /></div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-2">Price (₹)</label>
+              <div className="relative">
+                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-red-600 font-bold">₹</span>
+                <input
+                  required
+                  type="text"
+                  value={newProduct.price}
+                  onChange={(e) => {
+                    let val = e.target.value.replace(/[₹,]/g, '');
+                    if(!isNaN(val) || val === '') {
+                      setNewProduct({ ...newProduct, price: val });
+                    }
+                  }}
+                  className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 pl-12 pr-6 text-sm focus:border-red-600 outline-none transition-all"
+                  placeholder="4,500"
+                />
+              </div>
+            </div>
             <div className="space-y-2"><label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-2">Category</label><select value={newProduct.category} onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })} className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 text-sm focus:border-red-600 outline-none transition-all appearance-none text-white"><option value="Tools">Tools</option><option value="HACKS">HACKS</option><option value="CCs">CCs</option><option value="Scripts">Scripts</option><option value="SOURCE">SOURCE</option></select></div>
           </div>
           <div className="space-y-2"><label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-2">Description</label><textarea required value={newProduct.desc} onChange={(e) => setNewProduct({ ...newProduct, desc: e.target.value })} className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 text-sm focus:border-red-600 outline-none transition-all min-h-[100px]" placeholder="Technical breakdown..." /></div>

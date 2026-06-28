@@ -80,7 +80,24 @@ const EditAssetModal = ({ isOpen, onClose, onSubmit, asset, currentUser }) => {
 
           <div className="space-y-2"><label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-2">Asset Name</label><input required type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 text-sm focus:border-red-600 outline-none text-white transition-all" /></div>
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2"><label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-2">Price (₹)</label><input required type="text" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 text-sm focus:border-red-600 outline-none text-white transition-all" /></div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-2">Price (₹)</label>
+              <div className="relative">
+                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-red-600 font-bold">₹</span>
+                <input
+                  required
+                  type="text"
+                  value={formData.price}
+                  onChange={(e) => {
+                    let val = e.target.value.replace(/[₹,]/g, '');
+                    if(!isNaN(val) || val === '') {
+                      setFormData({ ...formData, price: val });
+                    }
+                  }}
+                  className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 pl-12 pr-6 text-sm focus:border-red-600 outline-none text-white transition-all"
+                />
+              </div>
+            </div>
             <div className="space-y-2"><label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-2">Category</label><select value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })} className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 text-sm focus:border-red-600 outline-none text-white transition-all appearance-none"><option value="Tools">Tools</option><option value="HACKS">HACKS</option><option value="CCs">CCs</option><option value="Scripts">Scripts</option><option value="SOURCE">SOURCE</option></select></div>
           </div>
           <div className="grid grid-cols-2 gap-4">

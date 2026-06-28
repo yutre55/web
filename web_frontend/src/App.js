@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from './utils/icons';
-import { callApi } from './utils/api';
+import { callApi, pingServer } from './utils/api';
 import './index.css';
 
 // Components - Common
@@ -12,6 +12,7 @@ import TelemetryUI from './components/common/TelemetryUI';
 import EnlistAssetModal from './components/modals/EnlistAssetModal';
 import DeployRoomModal from './components/modals/DeployRoomModal';
 import EditAssetModal from './components/modals/EditAssetModal';
+import ImageZoomModal from './components/modals/ImageZoomModal';
 
 // Components - Tabs
 import MarketTab from './components/tabs/MarketTab';
@@ -47,6 +48,7 @@ const App = () => {
   const [isEnlisting, setIsEnlisting] = useState(false);
   const [isEnlistingRoom, setIsEnlistingRoom] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [zoomImage, setZoomImage] = useState(null);
   const [newProduct, setNewProduct] = useState({ name: '', price: '', desc: '', category: 'Tools', stock: 10, isSoldOut: false });
   const [newRoom, setNewRoom] = useState({ title: '', prize: '', entry: '', date: '', time: '', map: 'Erangel', mode: 'Squad' });
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -56,6 +58,19 @@ const App = () => {
   const [liveStats, setLiveStats] = useState({ relays: 4892, bandwidth: 892.4, latency: 12 });
 
   const graphSeeds = useMemo(() => Array.from({ length: 40 }, () => ({ h1: 10 + Math.random() * 20, h2: 40 + Math.random() * 50, h3: 10 + Math.random() * 20, d: 1.5 + Math.random() * 2, delay: Math.random() * 0.5 })), []);
+
+  // --- WAKE UP BACKEND (KEEPALIVE) ---
+  useEffect(() => {
+    // 1. Warm up backend immediately on load
+    pingServer();
+
+    // 2. Keep backend awake every 10 minutes (Render sleeps after 15)
+    const keepAlive = setInterval(() => {
+      pingServer();
+    }, 600000); // 10 minutes
+
+    return () => clearInterval(keepAlive);
+  }, []);
 
   useEffect(() => {
     const fetchData = async (isManual = false) => {
@@ -304,6 +319,7 @@ const App = () => {
             <EnlistAssetModal isOpen={isEnlisting} onClose={() => setIsEnlisting(false)} onSubmit={handleEnlist} newProduct={newProduct} setNewProduct={setNewProduct} currentUser={currentUser} />
             <DeployRoomModal isOpen={isEnlistingRoom} onClose={() => setIsEnlistingRoom(false)} onSubmit={handleDeployRoom} newRoom={newRoom} setNewRoom={setNewRoom} />
             <EditAssetModal isOpen={!!editingProduct} onClose={() => setEditingProduct(null)} onSubmit={handleEditProduct} asset={editingProduct} currentUser={currentUser} />
+            <ImageZoomModal isOpen={!!zoomImage} onClose={() => setZoomImage(null)} imageUrl={zoomImage?.url} altText={zoomImage?.name} />
 
             {/* Mobile Navigation Sidebar */}
             {isMobileMenuOpen && (
@@ -421,7 +437,7 @@ const App = () => {
           <main className="flex-1 p-4 sm:p-6 lg:p-10 max-w-full overflow-x-hidden">
             <AnimatePresence mode="wait">
               <motion.div key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
-                {activeTab === 'market' && <MarketTab products={products} searchQuery={searchQuery} setSearchQuery={setSearchQuery} handleAcquire={handleAcquire} />}
+                {activeTab === 'market' && <MarketTab products={products} searchQuery={searchQuery} setSearchQuery={setSearchQuery} handleAcquire={handleAcquire} onZoomImage={(url, name) => setZoomImage({ url, name })} />}
                 {activeTab === 'bgmi' && <BgmiArenaTab tournaments={tournaments} registeredTournaments={registeredTournaments} handleRegisterTournament={handleRegisterTournament} currentUser={currentUser} />}
                 {activeTab === 'cart' && <CartTab cart={cart} setCart={(newCart) => {
                   setCart(newCart);

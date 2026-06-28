@@ -81,9 +81,17 @@ const ManagementTab = ({ orders, setIsEnlisting, setIsEnlistingRoom, handleUpdat
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-         <div className="bg-zinc-900/40 border border-white/5 rounded-[2.5rem] p-8 backdrop-blur-md"><h3 className="text-xl font-black uppercase mb-6 flex items-center gap-3"><Icons.Zap className="w-5 h-5 text-green-500" />Asset Deployment</h3><p className="text-zinc-500 text-sm mb-8 italic">{"// Enlist new exploits or tools into the market terminal."}</p><button onClick={() => setIsEnlisting(true)} className="w-full bg-green-500/10 text-green-500 border border-green-500/20 py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-green-600 hover:text-white transition-all">Enlist New Asset</button></div>
-         <div className="bg-zinc-900/40 border border-white/5 rounded-[2.5rem] p-8 backdrop-blur-md"><h3 className="text-xl font-black uppercase mb-6 flex items-center gap-3"><Icons.Trophy className="w-5 h-5 text-red-600" />Simulation Control</h3><p className="text-zinc-500 text-sm mb-8 italic">{"// Deploy new combat rooms and manage simulations."}</p><button onClick={() => setIsEnlistingRoom(true)} className="w-full bg-red-600/10 text-red-600 border border-red-600/20 py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-red-600 hover:text-white transition-all">Deploy New Room</button></div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 mb-12">
+         <div className="bg-zinc-900/40 border border-white/5 rounded-[2.5rem] p-6 sm:p-8 backdrop-blur-md">
+            <h3 className="text-lg sm:text-xl font-black uppercase mb-4 sm:mb-6 flex items-center gap-3"><Icons.Zap className="w-5 h-5 text-green-500" />Asset Deployment</h3>
+            <p className="text-zinc-500 text-xs sm:text-sm mb-6 sm:mb-8 italic">{"// Enlist new exploits or tools into the market terminal."}</p>
+            <button onClick={() => setIsEnlisting(true)} className="w-full bg-green-500/10 text-green-500 border border-green-500/20 py-3 sm:py-4 rounded-2xl font-black uppercase text-[10px] sm:text-xs tracking-widest hover:bg-green-600 hover:text-white transition-all">Enlist New Asset</button>
+         </div>
+         <div className="bg-zinc-900/40 border border-white/5 rounded-[2.5rem] p-6 sm:p-8 backdrop-blur-md">
+            <h3 className="text-lg sm:text-xl font-black uppercase mb-4 sm:mb-6 flex items-center gap-3"><Icons.Trophy className="w-5 h-5 text-red-600" />Simulation Control</h3>
+            <p className="text-zinc-500 text-xs sm:text-sm mb-6 sm:mb-8 italic">{"// Deploy new combat rooms and manage simulations."}</p>
+            <button onClick={() => setIsEnlistingRoom(true)} className="w-full bg-red-600/10 text-red-600 border border-red-600/20 py-3 sm:py-4 rounded-2xl font-black uppercase text-[10px] sm:text-xs tracking-widest hover:bg-red-600 hover:text-white transition-all">Deploy New Room</button>
+         </div>
       </div>
 
       {/* Payment Configuration Section */}
@@ -110,31 +118,30 @@ const ManagementTab = ({ orders, setIsEnlisting, setIsEnlistingRoom, handleUpdat
          </div>
       </div>
 
-      {/* Asset Management Section */}
-      <div className="bg-zinc-900/20 border border-white/5 rounded-[3rem] p-8 backdrop-blur-md mb-12">
-         <div className="flex items-center gap-4 mb-10"><div className="w-1.5 h-10 bg-green-600 rounded-full" /><div><h3 className="text-2xl font-black uppercase tracking-tighter">Market <span className="text-green-600">Inventory</span></h3><p className="text-[10px] text-zinc-600 font-mono tracking-widest uppercase italic">Stock_And_Pricing_Control</p></div></div>
-         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+      <div className="bg-zinc-900/20 border border-white/5 rounded-[2.5rem] sm:rounded-[3rem] p-6 sm:p-8 backdrop-blur-md mb-8 sm:mb-12">
+         <div className="flex items-center gap-4 mb-8 sm:mb-10"><div className="w-1.5 h-8 sm:h-10 bg-green-600 rounded-full" /><div><h3 className="text-xl sm:text-2xl font-black uppercase tracking-tighter">Market <span className="text-green-600">Inventory</span></h3><p className="text-[8px] sm:text-[10px] text-zinc-600 font-mono tracking-widest uppercase italic">Stock_And_Pricing_Control</p></div></div>
+         <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 sm:gap-4">
             {products.map(p => (
-               <div key={p._id} className="bg-black/40 border border-white/5 p-6 rounded-3xl flex justify-between items-center group hover:border-green-600/20 transition-all">
-                  <div className="flex items-center gap-4 flex-1">
-                     <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden shrink-0">
+               <div key={p._id} className="bg-black/40 border border-white/5 p-4 sm:p-6 rounded-2xl sm:rounded-3xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 group hover:border-green-600/20 transition-all">
+                  <div className="flex items-center gap-3 sm:gap-4 flex-1 w-full">
+                     <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden shrink-0">
                         {p.image_url ? (
                            <img src={`${API_BASE_URL}${p.image_url}`} alt={p.name} className="w-full h-full object-cover" />
                         ) : (
-                           <Icons.Zap className="w-5 h-5 text-zinc-700" />
+                           <Icons.Zap className="w-4 h-4 sm:w-5 sm:h-5 text-zinc-700" />
                         )}
                      </div>
-                     <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                           <h4 className="font-bold text-white uppercase tracking-tight">{p.name}</h4>
-                           {p.isSoldOut && <span className="text-[7px] font-black bg-red-600 text-white px-2 py-0.5 rounded-full uppercase">Sold Out</span>}
+                     <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5 sm:mb-1">
+                           <h4 className="font-bold text-white uppercase tracking-tight text-sm sm:text-base truncate">{p.name}</h4>
+                           {p.isSoldOut && <span className="text-[6px] sm:text-[7px] font-black bg-red-600 text-white px-1.5 py-0.5 rounded-full uppercase shrink-0">Sold Out</span>}
                         </div>
-                        <p className="text-[10px] text-zinc-500 font-mono uppercase italic">{p.category} • {p.price} • {p.stock} units left</p>
+                        <p className="text-[8px] sm:text-[10px] text-zinc-500 font-mono uppercase italic truncate">{p.category} • ₹{p.price} • {p.stock} units</p>
                      </div>
                   </div>
-                  <div className="flex gap-3 ml-4">
-                     <button onClick={() => setEditingProduct(p)} className="bg-white/5 text-zinc-400 border border-white/10 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all">Edit</button>
-                     <button onClick={() => handleRemoveProduct(p._id)} className="bg-red-600/10 text-red-600 border border-red-600/20 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all">Delete</button>
+                  <div className="flex gap-2 w-full sm:w-auto">
+                     <button onClick={() => setEditingProduct(p)} className="flex-1 sm:flex-none bg-white/5 text-zinc-400 border border-white/10 px-3 sm:px-4 py-2 rounded-lg sm:rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all">Edit</button>
+                     <button onClick={() => handleRemoveProduct(p._id)} className="flex-1 sm:flex-none bg-red-600/10 text-red-600 border border-red-600/20 px-3 sm:px-4 py-2 rounded-lg sm:rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all">Delete</button>
                   </div>
                </div>
             ))}
@@ -142,31 +149,61 @@ const ManagementTab = ({ orders, setIsEnlisting, setIsEnlistingRoom, handleUpdat
       </div>
 
       {/* Room Management Section */}
-      <div className="bg-zinc-900/20 border border-white/5 rounded-[3rem] p-8 backdrop-blur-md mb-12">
-         <div className="flex items-center gap-4 mb-10"><div className="w-1.5 h-10 bg-blue-600 rounded-full" /><div><h3 className="text-2xl font-black uppercase tracking-tighter">Active <span className="text-blue-600">Simulations</span></h3><p className="text-[10px] text-zinc-600 font-mono tracking-widest uppercase italic">Live_Deployment_Monitoring</p></div></div>
-         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+      <div className="bg-zinc-900/20 border border-white/5 rounded-[2.5rem] sm:rounded-[3rem] p-6 sm:p-8 backdrop-blur-md mb-8 sm:mb-12">
+         <div className="flex items-center gap-4 mb-8 sm:mb-10"><div className="w-1.5 h-8 sm:h-10 bg-blue-600 rounded-full" /><div><h3 className="text-xl sm:text-2xl font-black uppercase tracking-tighter">Active <span className="text-blue-600">Simulations</span></h3><p className="text-[8px] sm:text-[10px] text-zinc-600 font-mono tracking-widest uppercase italic">Live_Deployment_Monitoring</p></div></div>
+         <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 sm:gap-4">
             {tournaments.map(t => (
-               <div key={t._id} className="bg-black/40 border border-white/5 p-6 rounded-3xl flex justify-between items-center group hover:border-blue-600/20 transition-all">
-                  <div>
-                     <h4 className="font-bold text-white uppercase tracking-tight">{t.title}</h4>
-                     <p className="text-[10px] text-zinc-500 font-mono uppercase mt-1">{t.slots} Slots Filled • {t.map} ({t.mode})</p>
+               <div key={t._id} className="bg-black/40 border border-white/5 p-4 sm:p-6 rounded-2xl sm:rounded-3xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 group hover:border-blue-600/20 transition-all">
+                  <div className="flex-1 min-w-0">
+                     <h4 className="font-bold text-white uppercase tracking-tight text-sm sm:text-base truncate">{t.title}</h4>
+                     <p className="text-[8px] sm:text-[10px] text-zinc-500 font-mono uppercase mt-0.5 sm:mt-1 truncate">{t.slots} Slots Filled • {t.map} ({t.mode})</p>
                   </div>
-                  <div className="flex gap-3">
-                     <button onClick={() => setDistributingRoomId(t._id)} className="bg-blue-600/10 text-blue-500 border border-blue-600/20 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all">Send ID/Pass</button>
-                     <button onClick={() => handleRemoveRoomLocal(t._id)} className="bg-red-600/10 text-red-600 border border-red-600/20 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all">Delete</button>
+                  <div className="flex gap-2 w-full sm:w-auto">
+                     <button onClick={() => setDistributingRoomId(t._id)} className="flex-1 sm:flex-none bg-blue-600/10 text-blue-500 border border-blue-600/20 px-3 sm:px-4 py-2 rounded-lg sm:rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all">Send ID/Pass</button>
+                     <button onClick={() => handleRemoveRoomLocal(t._id)} className="flex-1 sm:flex-none bg-red-600/10 text-red-600 border border-red-600/20 px-3 sm:px-4 py-2 rounded-lg sm:rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all">Delete</button>
                   </div>
                </div>
             ))}
          </div>
       </div>
-      <div className="bg-zinc-900/20 border border-white/5 rounded-[3rem] p-8 backdrop-blur-md"><div className="flex justify-between items-center mb-10"><div className="flex items-center gap-4"><div className="w-1.5 h-10 bg-red-600 rounded-full" /><div><h3 className="text-2xl font-black uppercase tracking-tighter">Order <span className="text-red-600">Requests</span></h3><p className="text-[10px] text-zinc-600 font-mono tracking-widest uppercase italic">Pending_Asset_Transfers</p></div></div></div>
-         <div className="space-y-4">
-            {orders.filter(o => o.status === 'PENDING').map(o => (
-              <div key={o.order_id} className="bg-black/60 border border-white/5 p-8 rounded-3xl flex flex-col xl:flex-row justify-between items-center gap-6 group hover:border-red-600/20 transition-all">
-                 <div className="flex-1 space-y-4"><div className="flex flex-wrap items-center gap-3"><span className="text-[10px] font-black text-red-500 bg-red-500/10 px-3 py-1 rounded-full border border-red-500/20">{o.order_id}</span><span className="text-[9px] font-black text-blue-500 uppercase tracking-widest italic">@{o.username}</span></div><div className="flex flex-wrap gap-2">{o.items.map((item, idx) => <span key={idx} className="bg-white/5 border border-white/5 px-4 py-2 rounded-xl text-xs font-bold uppercase">{item.name}</span>)}</div></div>
-                 <div className="flex xl:flex-col items-center xl:items-end justify-between gap-6 border-t xl:border-t-0 xl:border-l border-white/10 pt-6 xl:pt-0 xl:pl-10"><p className="text-2xl font-black text-white italic">₹{o.total}</p><div className="flex gap-3"><button onClick={() => handleUpdateStatus(o.order_id, 'DEPLOYED')} className="bg-green-500 p-3 rounded-xl hover:bg-green-600 transition-all shadow-lg text-white"><Icons.ShieldCheck className="w-5 h-5" /></button><button onClick={() => handleUpdateStatus(o.order_id, 'DENIED')} className="bg-red-600 p-3 rounded-xl hover:bg-red-700 transition-all shadow-lg text-white"><Icons.X className="w-5 h-5" /></button></div></div>
-              </div>
-            ))}
+      <div className="bg-zinc-900/20 border border-white/5 rounded-[2.5rem] sm:rounded-[3rem] p-6 sm:p-8 backdrop-blur-md">
+         <div className="flex justify-between items-center mb-8 sm:mb-10">
+            <div className="flex items-center gap-4">
+               <div className="w-1.5 h-8 sm:h-10 bg-red-600 rounded-full" />
+               <div>
+                  <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tighter">Order <span className="text-red-600">Requests</span></h3>
+                  <p className="text-[8px] sm:text-[10px] text-zinc-600 font-mono tracking-widest uppercase italic">Pending_Asset_Transfers</p>
+               </div>
+            </div>
+         </div>
+         <div className="space-y-3 sm:space-y-4">
+            {orders.filter(o => o.status === 'PENDING').length === 0 ? (
+               <div className="py-12 text-center opacity-20">
+                  <Icons.Package className="w-8 h-8 mx-auto mb-2" />
+                  <p className="text-[10px] font-black uppercase tracking-widest">No Pending Orders</p>
+               </div>
+            ) : (
+               orders.filter(o => o.status === 'PENDING').map(o => (
+                 <div key={o.order_id} className="bg-black/60 border border-white/5 p-5 sm:p-8 rounded-2xl sm:rounded-3xl flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 sm:gap-6 group hover:border-red-600/20 transition-all">
+                    <div className="flex-1 space-y-3 sm:space-y-4 w-full">
+                       <div className="flex flex-wrap items-center gap-3">
+                          <span className="text-[9px] sm:text-[10px] font-black text-red-500 bg-red-500/10 px-2.5 py-1 rounded-full border border-red-500/20">{o.order_id}</span>
+                          <span className="text-[8px] sm:text-[9px] font-black text-blue-500 uppercase tracking-widest italic">@{o.username}</span>
+                       </div>
+                       <div className="flex flex-wrap gap-2">
+                          {o.items.map((item, idx) => <span key={idx} className="bg-white/5 border border-white/5 px-3 py-1.5 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold uppercase">{item.name}</span>)}
+                       </div>
+                    </div>
+                    <div className="flex xl:flex-col items-center xl:items-end justify-between w-full xl:w-auto gap-4 sm:gap-6 border-t xl:border-t-0 xl:border-l border-white/10 pt-4 sm:pt-6 xl:pt-0 xl:pl-10">
+                       <p className="text-xl sm:text-2xl font-black text-white italic">₹{o.total}</p>
+                       <div className="flex gap-2 sm:gap-3">
+                          <button onClick={() => handleUpdateStatus(o.order_id, 'DEPLOYED')} className="bg-green-500 p-2.5 sm:p-3 rounded-lg sm:rounded-xl hover:bg-green-600 transition-all shadow-lg text-white"><Icons.ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5" /></button>
+                          <button onClick={() => handleUpdateStatus(o.order_id, 'DENIED')} className="bg-red-600 p-2.5 sm:p-3 rounded-lg sm:rounded-xl hover:bg-red-700 transition-all shadow-lg text-white"><Icons.X className="w-4 h-4 sm:w-5 sm:h-5" /></button>
+                       </div>
+                    </div>
+                 </div>
+               ))
+            )}
          </div>
       </div>
     </div>

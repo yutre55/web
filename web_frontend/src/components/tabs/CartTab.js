@@ -33,7 +33,7 @@ const CartTab = ({ cart, setCart, calculateTotal, handleOrder }) => {
               )}
 
               <h3 className="text-xl font-bold mb-3 uppercase tracking-tight line-clamp-1">{p.name}</h3><p className="text-zinc-500 text-xs leading-relaxed mb-8 font-medium min-h-[3rem] line-clamp-2">{p.desc}</p>
-              <div className="flex items-center justify-between pt-6 border-t border-white/10"><div className="flex flex-col"><span className="text-[9px] text-zinc-600 font-black uppercase">Asset Value</span><span className="font-black text-white text-lg">{p.price}</span></div></div>
+              <div className="flex items-center justify-between pt-6 border-t border-white/10"><div className="flex flex-col"><span className="text-[9px] text-zinc-600 font-black uppercase">Asset Value</span><span className="font-black text-white text-lg">₹{p.price}</span></div></div>
             </div>
           ))}
         </div>

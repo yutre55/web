@@ -41,23 +41,29 @@ const BackgroundElements = ({ mousePos }) => {
 
     const init = () => {
       resize();
-      nodes = Array.from({ length: 100 }, () => new Node());
+      // Reduce complexity for mobile devices to prevent lag
+      const isMobile = window.innerWidth < 768;
+      const nodeCount = isMobile ? 40 : 100;
+      nodes = Array.from({ length: nodeCount }, () => new Node());
     };
 
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.lineWidth = 1.2;
+      const isMobile = window.innerWidth < 768;
+      ctx.lineWidth = isMobile ? 0.8 : 1.2;
+      const maxDist = isMobile ? 100 : 150;
+
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
           const dx = nodes[i].x - nodes[j].x; const dy = nodes[i].y - nodes[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 150) {
-            ctx.strokeStyle = `rgba(239, 68, 68, ${0.8 - dist / 150})`;
+          if (dist < maxDist) {
+            ctx.strokeStyle = `rgba(239, 68, 68, ${0.8 - dist / maxDist})`;
             ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.stroke();
           }
         }
         nodes[i].update();
-        ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.arc(nodes[i].x, nodes[i].y, 2.5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.arc(nodes[i].x, nodes[i].y, isMobile ? 1.5 : 2.5, 0, Math.PI * 2); ctx.fill();
       }
       animationFrameId = requestAnimationFrame(draw);
     };
