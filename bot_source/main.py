@@ -747,6 +747,10 @@ def process_action(action, data, device_sig="web"):
     return response_data
 
 # --- FLASK WEB ROUTES ---
+@app.route('/api/v1/ping', methods=['GET'])
+def ping():
+    return jsonify({"success": True, "message": "Server Awake"})
+
 @app.route('/api/v1/web', methods=['POST'])
 def web_api():
     payload = request.json
