@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Icons } from '../../utils/icons';
-import { callApi, API_BASE_URL } from '../../utils/api';
+import { callApi, API_BASE_URL, getImageUrl } from '../../utils/api';
 import axios from 'axios';
 
 const ManagementTab = ({ orders, setIsEnlisting, setIsEnlistingRoom, handleUpdateOrderStatus, currentUser, tournaments, setTournaments, products, setEditingProduct, handleRemoveProduct, showNotify }) => {
@@ -126,7 +126,7 @@ const ManagementTab = ({ orders, setIsEnlisting, setIsEnlistingRoom, handleUpdat
                   <div className="flex items-center gap-3 sm:gap-4 flex-1 w-full">
                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden shrink-0">
                         {p.image_url ? (
-                           <img src={`${API_BASE_URL}${p.image_url}`} alt={p.name} className="w-full h-full object-cover" />
+                           <img src={getImageUrl(p.image_url)} alt={p.name} className="w-full h-full object-cover" />
                         ) : (
                            <Icons.Zap className="w-4 h-4 sm:w-5 sm:h-5 text-zinc-700" />
                         )}

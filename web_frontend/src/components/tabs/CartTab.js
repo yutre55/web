@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '../../utils/icons';
-import { API_BASE_URL } from '../../utils/api';
+import { getImageUrl } from '../../utils/api';
 
 const CartTab = ({ cart, setCart, calculateTotal, handleOrder }) => {
   return (
@@ -28,7 +28,7 @@ const CartTab = ({ cart, setCart, calculateTotal, handleOrder }) => {
               {/* Small Product Image Preview in Cart */}
               {p.image_url && (
                 <div className="w-full h-32 mb-6 rounded-2xl overflow-hidden bg-black/40 border border-white/5">
-                  <img src={`${API_BASE_URL}${p.image_url}`} alt={p.name} className="w-full h-full object-cover" />
+                  <img src={getImageUrl(p.image_url)} alt={p.name} className="w-full h-full object-cover" />
                 </div>
               )}
 

@@ -30,3 +30,9 @@ export const callApi = async (action, data = {}) => {
     return { success: false, message: "NETWORK_ERROR" };
   }
 };
+
+export const getImageUrl = (url) => {
+  if (!url) return null;
+  if (url.startsWith('data:') || url.startsWith('http')) return url;
+  return `${API_BASE_URL}${url}`;
+};

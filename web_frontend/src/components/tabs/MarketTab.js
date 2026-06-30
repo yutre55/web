@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '../../utils/icons';
-import { API_BASE_URL } from '../../utils/api';
+import { getImageUrl } from '../../utils/api';
 
 const MarketTab = ({ products, searchQuery, setSearchQuery, handleAcquire, onZoomImage }) => {
   return (
@@ -19,10 +19,10 @@ const MarketTab = ({ products, searchQuery, setSearchQuery, handleAcquire, onZoo
             {/* Product Image or Icon */}
             <div
               className="relative h-40 sm:h-48 mb-6 rounded-2xl overflow-hidden bg-black/40 flex items-center justify-center border border-white/5 cursor-zoom-in"
-              onClick={() => p.image_url && onZoomImage(`${API_BASE_URL}${p.image_url}`, p.name)}
+              onClick={() => p.image_url && onZoomImage(getImageUrl(p.image_url), p.name)}
             >
               {p.image_url ? (
-                <img src={`${API_BASE_URL}${p.image_url}`} alt={p.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                <img src={getImageUrl(p.image_url)} alt={p.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
               ) : (
                 <Icons.Zap className="w-12 h-12 text-red-600/20 group-hover:text-red-600 transition-colors" />
               )}

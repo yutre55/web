@@ -1,33 +1,34 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '../../utils/icons';
-import { API_BASE_URL } from '../../utils/api';
-import axios from 'axios';
+import { getImageUrl } from '../../utils/api';
 
 const EnlistAssetModal = ({ isOpen, onClose, onSubmit, newProduct, setNewProduct, currentUser }) => {
   const [isUploading, setIsUploading] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleFileChange = async (e) => {
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    setIsUploading(true);
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('admin_user', currentUser.username);
-
-    try {
-      const res = await axios.post(`${API_BASE_URL}/api/v1/upload_product_image`, formData);
-      if (res.data.success) {
-        setNewProduct({ ...newProduct, image_url: res.data.image_url });
-      }
-    } catch (err) {
-      console.error("Upload Error:", err);
-    } finally {
-      setIsUploading(false);
+    // Validate size (max 1MB for MongoDB doc limit safety)
+    if (file.size > 1024 * 1024) {
+      alert("Image is too large. Max 1MB allowed.");
+      return;
     }
+
+    setIsUploading(true);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setNewProduct({ ...newProduct, image_url: reader.result });
+      setIsUploading(false);
+    };
+    reader.onerror = () => {
+      console.error("FileReader Error");
+      setIsUploading(false);
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -42,7 +43,7 @@ const EnlistAssetModal = ({ isOpen, onClose, onSubmit, newProduct, setNewProduct
             <div className="relative group h-40 bg-black/40 border border-dashed border-white/10 rounded-2xl flex flex-col items-center justify-center overflow-hidden transition-all hover:border-red-600/30">
               {newProduct.image_url ? (
                 <>
-                  <img src={`${API_BASE_URL}${newProduct.image_url}`} alt="Preview" className="w-full h-full object-contain" />
+                  <img src={getImageUrl(newProduct.image_url)} alt="Preview" className="w-full h-full object-contain" />
                   <button type="button" onClick={() => setNewProduct({ ...newProduct, image_url: '' })} className="absolute top-2 right-2 bg-red-600 p-1.5 rounded-lg text-white opacity-0 group-hover:opacity-100 transition-opacity"><Icons.X className="w-3 h-3" /></button>
                 </>
               ) : (
