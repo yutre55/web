@@ -180,7 +180,19 @@ const WalletTab = ({ currentUser, setCurrentUser, orders, registeredTournaments,
          </div>
          <div>
             <h5 className="font-bold text-white uppercase mb-2">Security Protocol</h5>
-            <p className="text-zinc-500 text-xs leading-relaxed">Initialize a transfer to generate a one-time order hash. After payment, submit the 12-digit UTR provided by your bank. Verification is handled by elite relay engineers. ⚡</p>
+            <div className="space-y-2 text-zinc-500 text-xs leading-relaxed">
+              <p>Initialize a transfer to generate a one-time order hash. After payment, submit the 12-digit UTR provided by your bank. Verification is handled by elite relay engineers. ⚡</p>
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 pt-2 border-t border-white/5 mt-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-1 h-1 bg-red-600 rounded-full" />
+                  <p className="text-[10px] font-black uppercase tracking-widest"><span className="text-white">Deposit:</span> Credited in 2 hours</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-1 h-1 bg-red-600 rounded-full" />
+                  <p className="text-[10px] font-black uppercase tracking-widest"><span className="text-white">Delivery:</span> Completed in 3 to 5 hours</p>
+                </div>
+              </div>
+            </div>
          </div>
       </div>
 
