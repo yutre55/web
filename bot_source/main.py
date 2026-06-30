@@ -336,6 +336,19 @@ def process_action(action, data, device_sig="web"):
         admin_user = data.get('admin_user')
         if users_col.find_one({"username": {"$regex": f"^{admin_user}$", "$options": "i"}, "role": "admin"}):
             p_id = data.get('product_id')
+            
+            # Clean up legacy image file if exists
+            product = products_col.find_one({"_id": ObjectId(p_id)})
+            if product and product.get('image_url') and product['image_url'].startswith('/product_images/'):
+                try:
+                    filename = product['image_url'].split('/')[-1]
+                    file_path = os.path.join(os.path.dirname(__file__), "product_images", filename)
+                    if os.path.exists(file_path):
+                        os.remove(file_path)
+                        print(f"🗑️ Deleted legacy product image: {filename}")
+                except Exception as e:
+                    print(f"⚠️ Error deleting legacy image: {e}")
+
             products_col.delete_one({"_id": ObjectId(p_id)})
             remove_from_local("products", p_id)
             response_data = {"success": True, "message": "Product removed."}
@@ -825,7 +838,15 @@ def upload_product_image():
 @app.route('/product_images/<path:filename>')
 def serve_product_image(filename):
     img_dir = os.path.join(os.path.dirname(__file__), "product_images")
-    return send_from_directory(img_dir, filename)
+    response = send_from_directory(img_dir, filename)
+    
+    # ADD THESE HEADERS TO BYPASS NGROK WARNINGS AND DISABLE CACHE FOR RELIABILITY
+    response.headers['ngrok-skip-browser-warning'] = 'true'
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    
+    return response
 
 @app.route('/api/v1/gateway', methods=['GET', 'POST'])
 def gateway():
